@@ -3,7 +3,7 @@ package umu.tds.AppVideo.gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.EventQueue;
+
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -27,19 +27,6 @@ import com.toedter.calendar.JDateChooser;
 
 public class RegistroView {
 
-	
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					RegistroView frame = new RegistroView();
-					frame.mostrarVentana();;
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 	
 	private JFrame frmRegistro;
 	private JPasswordField txtContraseña;

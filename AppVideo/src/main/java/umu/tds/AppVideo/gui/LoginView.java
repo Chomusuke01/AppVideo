@@ -1,7 +1,6 @@
 package umu.tds.AppVideo.gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -20,20 +19,6 @@ import javax.swing.border.EmptyBorder;
 
 public class LoginView {
 
-
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					LoginView frame = new LoginView();
-					frame.mostrarVentana();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-	
 	private JFrame frmLogin;
 	private JTextField textUsuario;
 	private JPasswordField textPassword;

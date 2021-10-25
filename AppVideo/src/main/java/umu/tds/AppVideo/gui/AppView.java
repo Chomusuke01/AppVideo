@@ -4,9 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.EventQueue;
 import java.awt.FlowLayout;
-
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -14,26 +12,19 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 public class AppView {
 
-	
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					AppView frame = new AppView();
-					frame.mostrarVentana();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-	
-	
+
 	private JFrame frmApp;
 	private JPanel panelPrincipal;
-	
+	private JButton btnExplorar;
+	private JButton btnMisListas;
+	private JButton btnRecientes;
+	private JButton btnNuevaLista;
+	private JButton btnLogOut;
+	private JButton btnPremium;
 	
 	public AppView() {
 		initialize();
@@ -76,16 +67,16 @@ public class AppView {
 		panel_Norte.add(panelBtn, BorderLayout.SOUTH);
 		panelBtn.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
-		JButton btnExplorar = new JButton("Explorar");
+		btnExplorar = new JButton("Explorar");
 		panelBtn.add(btnExplorar);
 		
-		JButton btnMisListas = new JButton("Mis Listas\r\n");
+		btnMisListas = new JButton("Mis Listas\r\n");
 		panelBtn.add(btnMisListas);
 		
-		JButton btnRecientes = new JButton("Recientes");
+		btnRecientes = new JButton("Recientes");
 		panelBtn.add(btnRecientes);
 		
-		JButton btnNuevaLista = new JButton("Nueva Lista");
+		btnNuevaLista = new JButton("Nueva Lista");
 		panelBtn.add(btnNuevaLista);
 		
 		JPanel panelNorteSuperior = new JPanel();
@@ -108,10 +99,11 @@ public class AppView {
 		panelbtn2.setBackground(Color.LIGHT_GRAY);
 		panelNorteSuperior.add(panelbtn2, BorderLayout.EAST);
 		
-		JButton btnLogOut = new JButton("Logout");
+		btnLogOut = new JButton("Logout");
 		panelbtn2.add(btnLogOut);
+		crearManejadorBotonLogout(btnLogOut);
 		
-		JButton btnPremium = new JButton("PREMIUM");
+		btnPremium = new JButton("PREMIUM");
 		btnPremium.setFont(new Font("Tahoma", Font.BOLD, 11));
 		panelbtn2.add(btnPremium);
 		
@@ -121,5 +113,15 @@ public class AppView {
 	public void mostrarVentana() {
 		frmApp.setLocationRelativeTo(null);
 		frmApp.setVisible(true);
+	}
+	
+	private void crearManejadorBotonLogout(JButton btnRegistro) {
+		btnRegistro.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				LoginView loginView = new LoginView();
+				loginView.mostrarVentana();
+				frmApp.dispose();
+			}
+		});
 	}
 }
