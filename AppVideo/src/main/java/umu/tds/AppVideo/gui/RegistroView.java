@@ -91,9 +91,9 @@ public class RegistroView {
 		panelCentro.setBackground(new Color(240, 240, 240));
 		panelCentro.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
 		GridBagLayout gbl_panelCentro = new GridBagLayout();
-		gbl_panelCentro.columnWidths = new int[]{5, 0, 0, 0, 0, 0, 0, 5, 0};
+		gbl_panelCentro.columnWidths = new int[]{0, 0, 0, 0, 0, 0, 0};
 		gbl_panelCentro.rowHeights = new int[]{0, 10, 0, 10, 10, 10, 30, 10, 0, 10, 0, 75, 0, 40, 0, 0, 0};
-		gbl_panelCentro.columnWeights = new double[]{0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE};
+		gbl_panelCentro.columnWeights = new double[]{1.0, 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
 		gbl_panelCentro.rowWeights = new double[]{1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
 		panelCentro.setLayout(gbl_panelCentro);
 		
@@ -101,18 +101,9 @@ public class RegistroView {
 		GridBagConstraints gbc_lblNombre = new GridBagConstraints();
 		gbc_lblNombre.insets = new Insets(0, 0, 5, 5);
 		gbc_lblNombre.anchor = GridBagConstraints.EAST;
-		gbc_lblNombre.gridx = 2;
+		gbc_lblNombre.gridx = 1;
 		gbc_lblNombre.gridy = 1;
 		panelCentro.add(lblNombre, gbc_lblNombre);
-	
-		lblNombreError = new JLabel("");
-		GridBagConstraints gbc_lblNombreError = new GridBagConstraints();
-		gbc_lblNombreError.fill = GridBagConstraints.HORIZONTAL;
-		gbc_lblNombreError.insets = new Insets(0, 0, 5, 5);
-		gbc_lblNombreError.gridx = 3;
-		gbc_lblNombreError.gridy = 2;
-		lblNombreError.setForeground(Color.RED);
-		panelCentro.add(lblNombreError, gbc_lblNombreError);
 	
 		txtNombre = new JTextField();
 		txtNombre.setColumns(10);
@@ -120,15 +111,24 @@ public class RegistroView {
 		gbc_textField.gridwidth = 2;
 		gbc_textField.fill = GridBagConstraints.HORIZONTAL;
 		gbc_textField.insets = new Insets(0, 0, 5, 5);
-		gbc_textField.gridx = 3;
+		gbc_textField.gridx = 2;
 		gbc_textField.gridy = 1;
 		panelCentro.add(txtNombre, gbc_textField);
+		
+			lblNombreError = new JLabel("");
+			GridBagConstraints gbc_lblNombreError = new GridBagConstraints();
+			gbc_lblNombreError.fill = GridBagConstraints.HORIZONTAL;
+			gbc_lblNombreError.insets = new Insets(0, 0, 5, 5);
+			gbc_lblNombreError.gridx = 4;
+			gbc_lblNombreError.gridy = 1;
+			lblNombreError.setForeground(Color.RED);
+			panelCentro.add(lblNombreError, gbc_lblNombreError);
 				
 		lblApellidos = new JLabel("Apellidos:");
 		GridBagConstraints gbc_lblApellidos = new GridBagConstraints();
 		gbc_lblApellidos.anchor = GridBagConstraints.EAST;
 		gbc_lblApellidos.insets = new Insets(0, 0, 5, 5);
-		gbc_lblApellidos.gridx = 2;
+		gbc_lblApellidos.gridx = 1;
 		gbc_lblApellidos.gridy = 3;
 		panelCentro.add(lblApellidos, gbc_lblApellidos);
 		
@@ -137,7 +137,7 @@ public class RegistroView {
 		gbc_textField_1.fill = GridBagConstraints.HORIZONTAL;
 		gbc_textField_1.gridwidth = 2;
 		gbc_textField_1.insets = new Insets(0, 0, 5, 5);
-		gbc_textField_1.gridx = 3;
+		gbc_textField_1.gridx = 2;
 		gbc_textField_1.gridy = 3;
 		panelCentro.add(txtApellidos, gbc_textField_1);
 		txtApellidos.setColumns(10);
@@ -146,7 +146,7 @@ public class RegistroView {
 		GridBagConstraints gbc_lblFecha = new GridBagConstraints();
 		gbc_lblFecha.anchor = GridBagConstraints.EAST;
 		gbc_lblFecha.insets = new Insets(0, 0, 5, 5);
-		gbc_lblFecha.gridx = 2;
+		gbc_lblFecha.gridx = 1;
 		gbc_lblFecha.gridy = 4;
 		panelCentro.add(lblFecha, gbc_lblFecha);
 		
@@ -155,7 +155,7 @@ public class RegistroView {
 		GridBagConstraints gbc_dateChooser = new GridBagConstraints();
 		gbc_dateChooser.insets = new Insets(0, 0, 5, 5);
 		gbc_dateChooser.fill = GridBagConstraints.BOTH;
-		gbc_dateChooser.gridx = 3;
+		gbc_dateChooser.gridx = 2;
 		gbc_dateChooser.gridy = 4;
 		//fechaNacimiento.setDateFormatString("dd/mm/aa");
 		panelCentro.add(fechaNacimiento, gbc_dateChooser);
@@ -164,7 +164,7 @@ public class RegistroView {
 		GridBagConstraints gbc_lblEmail = new GridBagConstraints();
 		gbc_lblEmail.anchor = GridBagConstraints.EAST;
 		gbc_lblEmail.insets = new Insets(0, 0, 5, 5);
-		gbc_lblEmail.gridx = 2;
+		gbc_lblEmail.gridx = 1;
 		gbc_lblEmail.gridy = 5;
 		panelCentro.add(lblEmail, gbc_lblEmail);
 		
@@ -173,7 +173,7 @@ public class RegistroView {
 		gbc_textField_2.fill = GridBagConstraints.HORIZONTAL;
 		gbc_textField_2.gridwidth = 2;
 		gbc_textField_2.insets = new Insets(0, 0, 5, 5);
-		gbc_textField_2.gridx = 3;
+		gbc_textField_2.gridx = 2;
 		gbc_textField_2.gridy = 5;
 		panelCentro.add(txtEmail, gbc_textField_2);
 		txtEmail.setColumns(10);
@@ -182,7 +182,7 @@ public class RegistroView {
 		GridBagConstraints gbc_lblUsuario = new GridBagConstraints();
 		gbc_lblUsuario.anchor = GridBagConstraints.EAST;
 		gbc_lblUsuario.insets = new Insets(0, 0, 5, 5);
-		gbc_lblUsuario.gridx = 2;
+		gbc_lblUsuario.gridx = 1;
 		gbc_lblUsuario.gridy = 7;
 		panelCentro.add(lblUsuario, gbc_lblUsuario);
 		
@@ -190,7 +190,7 @@ public class RegistroView {
 		GridBagConstraints gbc_textField_3 = new GridBagConstraints();
 		gbc_textField_3.fill = GridBagConstraints.HORIZONTAL;
 		gbc_textField_3.insets = new Insets(0, 0, 5, 5);
-		gbc_textField_3.gridx = 3;
+		gbc_textField_3.gridx = 2;
 		gbc_textField_3.gridy = 7;
 		panelCentro.add(txtUsuario, gbc_textField_3);
 		txtUsuario.setColumns(10);
@@ -199,8 +199,8 @@ public class RegistroView {
 		GridBagConstraints gbc_lblUsuarioError = new GridBagConstraints();
 		gbc_lblUsuarioError.fill = GridBagConstraints.HORIZONTAL;
 		gbc_lblUsuarioError.insets = new Insets(0, 0, 5, 5);
-		gbc_lblUsuarioError.gridx = 3;
-		gbc_lblUsuarioError.gridy = 8;
+		gbc_lblUsuarioError.gridx = 4;
+		gbc_lblUsuarioError.gridy = 7;
 		panelCentro.add(lblUsuarioError, gbc_lblUsuarioError);
 		lblUsuarioError.setForeground(Color.RED);
 		panelCentro.add(lblUsuarioError, gbc_lblUsuarioError);
@@ -210,7 +210,7 @@ public class RegistroView {
 		GridBagConstraints gbc_lblContraseña = new GridBagConstraints();
 		gbc_lblContraseña.anchor = GridBagConstraints.EAST;
 		gbc_lblContraseña.insets = new Insets(0, 0, 5, 5);
-		gbc_lblContraseña.gridx = 2;
+		gbc_lblContraseña.gridx = 1;
 		gbc_lblContraseña.gridy = 9;
 		panelCentro.add(lblContraseña, gbc_lblContraseña);
 		
@@ -219,7 +219,7 @@ public class RegistroView {
 		GridBagConstraints gbc_passwordField = new GridBagConstraints();
 		gbc_passwordField.fill = GridBagConstraints.HORIZONTAL;
 		gbc_passwordField.insets = new Insets(0, 0, 5, 5);
-		gbc_passwordField.gridx = 3;
+		gbc_passwordField.gridx = 2;
 		gbc_passwordField.gridy = 9;
 		panelCentro.add(txtContraseña, gbc_passwordField);
 		
@@ -227,7 +227,7 @@ public class RegistroView {
 		GridBagConstraints gbc_lblRepetir = new GridBagConstraints();
 		gbc_lblRepetir.fill = GridBagConstraints.HORIZONTAL;
 		gbc_lblRepetir.insets = new Insets(0, 0, 5, 5);
-		gbc_lblRepetir.gridx = 4;
+		gbc_lblRepetir.gridx = 3;
 		gbc_lblRepetir.gridy = 9;
 		panelCentro.add(lblRepetir, gbc_lblRepetir);
 		
@@ -235,7 +235,7 @@ public class RegistroView {
 		txtRepetir.setColumns(10);
 		GridBagConstraints gbc_passwordField_1 = new GridBagConstraints();
 		gbc_passwordField_1.insets = new Insets(0, 0, 5, 5);
-		gbc_passwordField_1.gridx = 5;
+		gbc_passwordField_1.gridx = 4;
 		gbc_passwordField_1.gridy = 9;
 		panelCentro.add(txtRepetir, gbc_passwordField_1);
 		
@@ -243,7 +243,7 @@ public class RegistroView {
 		GridBagConstraints gbc_lblContraseñaError = new GridBagConstraints();
 		gbc_lblContraseñaError.fill = GridBagConstraints.HORIZONTAL;
 		gbc_lblContraseñaError.insets = new Insets(0, 0, 5, 5);
-		gbc_lblContraseñaError.gridx = 3;
+		gbc_lblContraseñaError.gridx = 2;
 		gbc_lblContraseñaError.gridy = 10;
 		lblContraseñaError.setForeground(Color.RED);
 		panelCentro.add(lblContraseñaError, gbc_lblContraseñaError);
@@ -252,7 +252,7 @@ public class RegistroView {
 		GridBagConstraints gbc_btnRegistrar = new GridBagConstraints();
 		gbc_btnRegistrar.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnRegistrar.insets = new Insets(0, 0, 5, 5);
-		gbc_btnRegistrar.gridx = 3;
+		gbc_btnRegistrar.gridx = 2;
 		gbc_btnRegistrar.gridy = 12;
 		btnRegistrar.setIcon(new ImageIcon (getClass().getResource("/Register-PNGs.png")));
 		panelCentro.add(btnRegistrar, gbc_btnRegistrar);
@@ -263,7 +263,7 @@ public class RegistroView {
 		GridBagConstraints gbc_btnCancelar = new GridBagConstraints();
 		gbc_btnCancelar.anchor = GridBagConstraints.WEST;
 		gbc_btnCancelar.insets = new Insets(0, 0, 5, 5);
-		gbc_btnCancelar.gridx = 5;
+		gbc_btnCancelar.gridx = 4;
 		gbc_btnCancelar.gridy = 12;
 		panelCentro.add(btnCancelar, gbc_btnCancelar);
 		crearManejadorBotonCancelar(btnCancelar);
@@ -272,7 +272,7 @@ public class RegistroView {
 		GridBagConstraints gbc_lblCampos = new GridBagConstraints();
 		gbc_lblCampos.fill = GridBagConstraints.HORIZONTAL;
 		gbc_lblCampos.insets = new Insets(0, 0, 5, 5);
-		gbc_lblCampos.gridx = 3;
+		gbc_lblCampos.gridx = 2;
 		gbc_lblCampos.gridy = 14;
 		panelCentro.add(lblCampos, gbc_lblCampos);
 		

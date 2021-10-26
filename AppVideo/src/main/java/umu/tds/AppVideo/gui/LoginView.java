@@ -23,6 +23,7 @@ public class LoginView {
 	private JTextField textUsuario;
 	private JPasswordField textPassword;
 	private JButton btnRegistro;
+	private JButton btnLogin;
 	
 	
 	public LoginView() {
@@ -89,12 +90,13 @@ public class LoginView {
 		gbl_panel_3.rowWeights = new double[]{0.0, 1.0, 0.0, 1.0, Double.MIN_VALUE};
 		panel_3.setLayout(gbl_panel_3);
 		
-		JButton btnLogin = new JButton("Login");
+		btnLogin = new JButton("Login");
 		GridBagConstraints gbc_btnLogin = new GridBagConstraints();
 		gbc_btnLogin.insets = new Insets(0, 0, 5, 5);
 		gbc_btnLogin.gridx = 1;
 		gbc_btnLogin.gridy = 2;
 		panel_3.add(btnLogin, gbc_btnLogin);
+		crearManejadorBotonLogin(btnLogin);
 		
 		btnRegistro = new JButton("Registrar");
 		GridBagConstraints gbc_btnRegistro = new GridBagConstraints();
@@ -116,6 +118,16 @@ public class LoginView {
 		});
 	}
 
+	private void crearManejadorBotonLogin(JButton btnLogin) {
+		btnLogin.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				AppView appView = new AppView();
+				appView.mostrarVentana();
+				frmLogin.dispose();
+			}
+		});
+	}
+	
 	public void mostrarVentana() {
 		frmLogin.setLocationRelativeTo(null);
 		frmLogin.setVisible(true);

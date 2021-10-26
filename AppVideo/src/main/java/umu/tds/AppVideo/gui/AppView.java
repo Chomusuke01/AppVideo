@@ -25,6 +25,7 @@ public class AppView {
 	private JButton btnNuevaLista;
 	private JButton btnLogOut;
 	private JButton btnPremium;
+	private JPanel panelExplorar;
 	
 	public AppView() {
 		initialize();
@@ -44,13 +45,14 @@ public class AppView {
 		frmApp.getContentPane().add(addPanelNorte(),BorderLayout.NORTH);
 		panelPrincipal = addPanelPrincipal();
 		frmApp.getContentPane().add(panelPrincipal,BorderLayout.CENTER);
+		panelExplorar = new PanelExplorar();
+		panelPrincipal.add(panelExplorar,"panelExplorar");
 	}
 	
 	private JPanel addPanelPrincipal() {
 		
 		JPanel panelPrincipal = new JPanel();
 		panelPrincipal.setLayout(new CardLayout(0, 0));
-		
 		return panelPrincipal;
 	}
 	
@@ -115,8 +117,8 @@ public class AppView {
 		frmApp.setVisible(true);
 	}
 	
-	private void crearManejadorBotonLogout(JButton btnRegistro) {
-		btnRegistro.addActionListener(new ActionListener() {
+	private void crearManejadorBotonLogout(JButton btnLogout) {
+		btnLogout.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				LoginView loginView = new LoginView();
 				loginView.mostrarVentana();
@@ -124,4 +126,19 @@ public class AppView {
 			}
 		});
 	}
+	
+	private void crearManejadorBotonExplorar(JButton btnExplorars) {
+		
+	}
 }
+
+
+
+
+
+
+
+
+
+
+
