@@ -157,7 +157,7 @@ public class RegistroView {
 		gbc_dateChooser.fill = GridBagConstraints.BOTH;
 		gbc_dateChooser.gridx = 2;
 		gbc_dateChooser.gridy = 4;
-		//fechaNacimiento.setDateFormatString("dd/mm/aa");
+		fechaNacimiento.setDateFormatString("dd/MM/yy");
 		panelCentro.add(fechaNacimiento, gbc_dateChooser);
 		
 		lblEmail = new JLabel("Email:");

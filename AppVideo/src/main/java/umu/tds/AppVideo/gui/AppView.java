@@ -126,10 +126,11 @@ public class AppView {
 			}
 		});
 	}
-	
+	/*
 	private void crearManejadorBotonExplorar(JButton btnExplorars) {
 		
 	}
+	*/
 }
 
 
