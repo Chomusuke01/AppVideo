@@ -121,4 +121,16 @@ public class Usuario {
 		return new LinkedList<ListaReproduccion>(listasVideos);
 	}
 	
+	public void addListaRep (ListaReproduccion lista) {
+		listasVideos.add(lista);
+	}
+	
+	public void addReciente (Video reciente) {
+		
+		if (recientes.size() >= 5) { // Provisional
+			recientes.removeLast();
+		}
+		recientes.addFirst(reciente);
+	}
+	
 }

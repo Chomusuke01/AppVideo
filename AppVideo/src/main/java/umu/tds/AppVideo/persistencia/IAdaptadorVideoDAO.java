@@ -8,6 +8,6 @@ public interface IAdaptadorVideoDAO {
 	public void addVideo(Video video);
 	public List<Video> recuperarTodosVideos();
 	public Video recuperarVideo(int codigo);
-	public Video findUsuario (Video video);
-	public boolean removeVideo(Video video);
+	public Video findVideo (Video video);
+	public void removeVideo(Video video);
 }

@@ -1,22 +1,29 @@
 package umu.tds.AppVideo.persistencia;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.StringTokenizer;
+import java.util.stream.Collectors;
 
 import beans.Entidad;
 import beans.Propiedad;
 import tds.driver.FactoriaServicioPersistencia;
 import tds.driver.ServicioPersistencia;
+import umu.tds.AppVideo.modelo.ListaReproduccion;
 import umu.tds.AppVideo.modelo.Usuario;
+import umu.tds.AppVideo.modelo.Video;
 
 public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO{
 	
 	private static ServicioPersistencia servPersistencia;
 	private static AdaptadorUsuarioTDS unicaInstancia = null;
+	
+	private SimpleDateFormat dateFormat;
 	
 	public static AdaptadorUsuarioTDS getUnicaInstancia() { // patron singleton
 		if (unicaInstancia == null)
@@ -27,6 +34,7 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO{
 	
 	private AdaptadorUsuarioTDS() {
 		servPersistencia = FactoriaServicioPersistencia.getInstance().getServicioPersistencia();
+		dateFormat = new SimpleDateFormat("dd/MM/yy");
 	}
 	
 	
@@ -41,21 +49,24 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO{
 		if (eUsuario != null) return;
 
 		// registrar primero los atributos que son objetos
-		//TODO Hay que insertar el código para registrar la lista de videos recientes y las listas de reproduccion del usuario.
-
-		// crear entidad Cliente
-		// TODO falta ver el caso de que sea premium como lo metemos.
+		
+		AdaptadorVideoTDS adaptadorVideo = AdaptadorVideoTDS.getUnicaInstancia();
+		AdaptadorListaReproduccionTDS adaptadorListaRep = AdaptadorListaReproduccionTDS.getUnicaInstancia();
+		
+		u.getRecientes().stream().forEach(video -> adaptadorVideo.addVideo(video));
+		u.getListasVideos().stream().forEach(listaRep -> adaptadorListaRep.registrarListaRep(listaRep));
+		
+		
 		eUsuario = new Entidad();
 		eUsuario.setNombre("usuario");
 		
-		if(u.isPremium()) {
-			setPropiedades(eUsuario, u, "true");
-		}
-		else {
-			setPropiedades(eUsuario, u, "false");
-		}
-		
-		// registrar entidad cliente
+		eUsuario.setPropiedades(new ArrayList<Propiedad>(
+				Arrays.asList(new Propiedad("nombre", u.getNombre()), new Propiedad("apellidos", u.getApellidos()), 
+						new Propiedad ("fecha_nacimiento",dateFormat.format(u.getFechaNacimiento())), new Propiedad ("usuario",u.getUsuario()), new Propiedad("contraseña",u.getContraseña()), 
+						new Propiedad("email",u.getEmail()), new Propiedad("premium",String.valueOf(u.isPremium())), 
+						new Propiedad ("listasReproduccion", obtenerCodigosListaRep(u.getListasVideos())), 
+						new Propiedad("recientes", obtenerCodigosVideosRecientes(u.getRecientes())))));
+
 		eUsuario = servPersistencia.registrarEntidad(eUsuario);
 		// asignar identificador unico
 		// Se aprovecha el que genera el servicio de persistencia
@@ -64,10 +75,10 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO{
 	}
 
 	@Override
-	// TODO a lo mejor esto no hace falta xD
 	public List<Usuario> recuperarTodosUsuarios() {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return servPersistencia.recuperarEntidades("usuario").stream()
+				.map(u -> recuperarUsuario(u.getId())).collect(Collectors.toList());
 	}
 
 	@Override
@@ -76,38 +87,31 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO{
 		if (PoolDAO.getUnicaInstancia().contiene(codigo))
 		return (Usuario) PoolDAO.getUnicaInstancia().getObjeto(codigo);
 		
+		Entidad eUsuario = servPersistencia.recuperarEntidad(codigo);
 		
-		Entidad eUsuario;
-		//TODO hay que meter tambien las lista de reproduccion y los recientes.
-		String usuario;
-		String nombre;
-		String apellidos;
-		String fecha_nacimiento;
-		String contraseña;
-		String email;
+		String usuario = servPersistencia.recuperarPropiedadEntidad(eUsuario, "usuario");
+		String nombre = servPersistencia.recuperarPropiedadEntidad(eUsuario, "nombre");
+		String contraseña = servPersistencia.recuperarPropiedadEntidad(eUsuario, "contraseña");
+		String apellidos = servPersistencia.recuperarPropiedadEntidad(eUsuario, "apellidos");
+		String email = servPersistencia.recuperarPropiedadEntidad(eUsuario, "email");
 		
+		Date fecha_nacimiento = null;
 		
-		// recuperar entidad
-		eUsuario = servPersistencia.recuperarEntidad(codigo);
-		
-		// recuperar propiedades que no son objetos
-		usuario = servPersistencia.recuperarPropiedadEntidad(eUsuario, "usuario");
-		nombre = servPersistencia.recuperarPropiedadEntidad(eUsuario, "nombre");
-		contraseña = servPersistencia.recuperarPropiedadEntidad(eUsuario, "contraseña");
-		apellidos = servPersistencia.recuperarPropiedadEntidad(eUsuario, "apellidos");
-		fecha_nacimiento = servPersistencia.recuperarPropiedadEntidad(eUsuario, "fecha_nacimiento");
-		email = servPersistencia.recuperarPropiedadEntidad(eUsuario, "email");
-		
-		DateFormat formatoFecha = new SimpleDateFormat("dd/MM/yy");
-		Usuario u = null;
 		try {
-			u = new Usuario(nombre, apellidos, email, usuario, contraseña, formatoFecha.parse(fecha_nacimiento));
-			u.setCodigo(codigo);
-			PoolDAO.getUnicaInstancia().addObjeto(codigo, u);
-			
+			fecha_nacimiento = dateFormat.parse(servPersistencia.recuperarPropiedadEntidad(eUsuario, "fecha_nacimiento"));
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
+		
+		Usuario u = new Usuario(nombre, apellidos, email, usuario, contraseña, fecha_nacimiento);
+		
+		u.setCodigo(eUsuario.getId());
+		
+		PoolDAO.getUnicaInstancia().addObjeto(codigo, u);
+		
+		obtenerListasRepDesdeCodigo(servPersistencia.recuperarPropiedadEntidad(eUsuario, "listasReproduccion")).stream().forEach(lista -> u.addListaRep(lista));
+		obtenerRecientesDesdeCodigo(servPersistencia.recuperarPropiedadEntidad(eUsuario, "recientes")).stream().forEach(v -> u.addReciente(v));
+		
 		return u;
 	}
 
@@ -118,65 +122,63 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO{
 	}
 
 	@Override
-	public boolean removeUsuario(Usuario u) {
-		// TODO Auto-generated method stub
-		return false;
+	public void removeUsuario(Usuario u) {
+		
+		Entidad eUsuario;
+		AdaptadorListaReproduccionTDS adaptadorListaRep = AdaptadorListaReproduccionTDS.getUnicaInstancia();
+		
+		u.getListasVideos().stream().forEach(lista -> adaptadorListaRep.borrarListaReproduccion(lista));
+		
+		eUsuario = servPersistencia.recuperarEntidad(u.getCodigo());
+		servPersistencia.borrarEntidad(eUsuario);
 	}
 	
 	
 	//----------------------Funciones auxiliares-----------------------//
-	
-	private void setPropiedades(Entidad eUsuario, Usuario u,String premium) {
-		eUsuario.setPropiedades(new ArrayList<Propiedad>(
-				Arrays.asList(new Propiedad("nombre", u.getNombre()), new Propiedad("apellidos", u.getApellidos()), 
-						new Propiedad ("fecha_nacimiento",u.getFechaNacimiento().toString()), new Propiedad ("usuario",u.getUsuario()), new Propiedad("contraseña",u.getContraseña()), 
-						new Propiedad("email",u.getEmail()), new Propiedad("premium",premium))));
-	}
 
+	private String obtenerCodigosListaRep(List<ListaReproduccion> listaRep) {
+		
+		String lineas = "";
+		
+		for(ListaReproduccion list : listaRep) {
+			lineas += list.getCodigo() + " ";
+		}
+		
+		return lineas.trim();
+	}
 	
+	private String obtenerCodigosVideosRecientes (List <Video> videos) {
+		
+		String lineas = "";
+		
+		for (Video v : videos) {
+			lineas += v.getCodigo() + " ";
+		}
+		
+		return lineas.trim();
+	}
 	
+	private List<Video> obtenerRecientesDesdeCodigo(String videos) {
+		
+		List<Video> recientes = new LinkedList<Video>();
+		StringTokenizer strTok = new StringTokenizer(videos, " ");
+		AdaptadorVideoTDS adaptadorVideo = AdaptadorVideoTDS.getUnicaInstancia();
+		while (strTok.hasMoreTokens()) {
+			recientes.add(adaptadorVideo.recuperarVideo(Integer.valueOf((String) strTok.nextElement())));
+		}
+		
+		return recientes;
+	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	private List<ListaReproduccion> obtenerListasRepDesdeCodigo(String listas){
+		
+		List<ListaReproduccion> listaRep = new LinkedList<ListaReproduccion>();
+		StringTokenizer strTok = new StringTokenizer(listas, " ");
+		AdaptadorListaReproduccionTDS adaptadorListasRep = AdaptadorListaReproduccionTDS.getUnicaInstancia();
+		while (strTok.hasMoreTokens()) {
+			listaRep.add(adaptadorListasRep.recuperarListaReproduccion(Integer.valueOf((String) strTok.nextElement())));
+		}
+		
+		return listaRep;
+	}
 }

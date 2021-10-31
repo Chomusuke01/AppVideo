@@ -2,7 +2,10 @@ package umu.tds.AppVideo.persistencia;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.StringTokenizer;
+import java.util.stream.Collectors;
 
 import beans.Entidad;
 import beans.Propiedad;
@@ -55,12 +58,14 @@ public class AdaptadorVideoTDS implements IAdaptadorVideoDAO {
 
 	@Override
 	public List<Video> recuperarTodosVideos() {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return servPersistencia.recuperarEntidades("video").stream()
+				.map(v -> recuperarVideo(v.getId())).collect(Collectors.toList()); // posible explosion
 	}
 
 	@Override
 	public Video recuperarVideo(int codigo) {
+		
 		if (PoolDAO.getUnicaInstancia().contiene(codigo))
 			return (Video) PoolDAO.getUnicaInstancia().getObjeto(codigo);
 		
@@ -74,28 +79,25 @@ public class AdaptadorVideoTDS implements IAdaptadorVideoDAO {
 		Video video = new Video(url, titulo,numReproducciones);
 		video.setCodigo(codigo);
 		
-		
 		PoolDAO.getUnicaInstancia().addObjeto(codigo, video); // Creo que no hace falta .
 		
-		AdaptadorEtiquetaTDS adaptadorEtiqueta = AdaptadorEtiquetaTDS.getUnicaInstancia();
-		int codigoEtiqueta = Integer.parseInt(servPersistencia.recuperarPropiedadEntidad(eVideo, "video"));
-		
-		Etiqueta etiqueta = adaptadorEtiqueta.recuperarEtiqueta(codigoEtiqueta);
-		
-		// luego sigo 
-		return null;
+		obtenerEtiquetasDesdeCodigos(servPersistencia.recuperarPropiedadEntidad(eVideo, "etiquetas")).stream().forEach(lb -> video.addEtiqueta(lb)); //Puede explotar
+	
+		return video;
 	}
 
 	@Override
-	public Video findUsuario(Video video) {
+	public Video findVideo(Video video) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public boolean removeVideo(Video video) {
-		// TODO Auto-generated method stub
-		return false;
+	public void removeVideo(Video video) {
+		
+		Entidad eVideo;
+		eVideo = servPersistencia.recuperarEntidad(video.getCodigo());
+		servPersistencia.borrarEntidad(eVideo);
 	}
 	
 	// -------------------Funciones auxiliares-----------------------------//
@@ -106,52 +108,22 @@ public class AdaptadorVideoTDS implements IAdaptadorVideoDAO {
 		
 		//TODO Seguramente se pueda hacer con un stream pero ahora no veo como, así que lo dejo provisional de esta manera.
 		for (Etiqueta etiqueta : etiquetas) {
-			lineas += etiqueta.getCodigo();
+			lineas += etiqueta.getCodigo() + " ";
 		}
 		
 		return lineas.trim();
+		
 	}
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	private List<Etiqueta> obtenerEtiquetasDesdeCodigos(String lineas) {
+		
+		List<Etiqueta> lineasVenta = new LinkedList<Etiqueta>();
+		StringTokenizer strTok = new StringTokenizer(lineas, " ");
+		AdaptadorEtiquetaTDS adaptadorEtiqueta = AdaptadorEtiquetaTDS.getUnicaInstancia();
+		while (strTok.hasMoreTokens()) {
+			lineasVenta.add(adaptadorEtiqueta.recuperarEtiqueta(Integer.valueOf((String) strTok.nextElement())));
+		}
+		return lineasVenta;
+	}
+
 }

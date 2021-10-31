@@ -77,47 +77,5 @@ public class AdaptadorEtiquetaTDS implements IAdaptadorEtiquetaDAO {
 		
 		return servPersistencia.recuperarEntidades("etiqueta").stream()
 				.map(e -> recuperarEtiqueta(e.getId())).collect(Collectors.toList());  // Es posible que explote, pero queda chulo.
-	}
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	}	
 }
