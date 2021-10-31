@@ -32,30 +32,34 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO{
 	
 	@Override
 	public void registrarUsuario(Usuario u) {
-		Entidad eCliente = null;
+		Entidad eUsuario = null;
 
 		// Si la entidad esta registrada no la registra de nuevo
 		try {
-			eCliente = servPersistencia.recuperarEntidad(u.getCodigo());
+			eUsuario = servPersistencia.recuperarEntidad(u.getCodigo());
 		} catch (NullPointerException e) {}
-		if (eCliente != null) return;
+		if (eUsuario != null) return;
 
 		// registrar primero los atributos que son objetos
 		//TODO Hay que insertar el código para registrar la lista de videos recientes y las listas de reproduccion del usuario.
 
 		// crear entidad Cliente
 		// TODO falta ver el caso de que sea premium como lo metemos.
-		eCliente = new Entidad();
-		eCliente.setNombre("usuario");
-		eCliente.setPropiedades(new ArrayList<Propiedad>(
-				Arrays.asList(new Propiedad("nombre", u.getNombre()), new Propiedad("apellidos", u.getApellidos()), 
-						new Propiedad ("fecha_nacimiento",u.getFechaNacimiento().toString()), new Propiedad ("usuario",u.getUsuario()), new Propiedad("contraseña",u.getContraseña()), new Propiedad("email",u.getEmail()))));
+		eUsuario = new Entidad();
+		eUsuario.setNombre("usuario");
+		
+		if(u.isPremium()) {
+			setPropiedades(eUsuario, u, "true");
+		}
+		else {
+			setPropiedades(eUsuario, u, "false");
+		}
 		
 		// registrar entidad cliente
-		eCliente = servPersistencia.registrarEntidad(eCliente);
+		eUsuario = servPersistencia.registrarEntidad(eUsuario);
 		// asignar identificador unico
 		// Se aprovecha el que genera el servicio de persistencia
-		u.setCodigo(eCliente.getId());
+		u.setCodigo(eUsuario.getId());
 		
 	}
 
@@ -107,4 +111,72 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO{
 		return u;
 	}
 
+	@Override
+	public Usuario findUsuario(Usuario u) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean removeUsuario(Usuario u) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	
+	
+	//----------------------Funciones auxiliares-----------------------//
+	
+	private void setPropiedades(Entidad eUsuario, Usuario u,String premium) {
+		eUsuario.setPropiedades(new ArrayList<Propiedad>(
+				Arrays.asList(new Propiedad("nombre", u.getNombre()), new Propiedad("apellidos", u.getApellidos()), 
+						new Propiedad ("fecha_nacimiento",u.getFechaNacimiento().toString()), new Propiedad ("usuario",u.getUsuario()), new Propiedad("contraseña",u.getContraseña()), 
+						new Propiedad("email",u.getEmail()), new Propiedad("premium",premium))));
+	}
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

@@ -37,5 +37,7 @@ public class CatalogoUsuarios {
 		return usuarios.get(usuario);
 	}
 	
-	
+	public void removeUsuario(Usuario u) {
+		usuarios.remove(u.getUsuario());
+	}
 }

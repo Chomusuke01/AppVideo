@@ -1,8 +1,8 @@
 package umu.tds.AppVideo.modelo;
 
 import java.util.Date;
-//import java.util.LinkedList;
-//import java.util.List;
+import java.util.LinkedList;
+import java.util.List;
 
 public class Usuario {
 	
@@ -14,7 +14,8 @@ public class Usuario {
 	private boolean premium;
 	private Date fechaNacimiento;
 	private int codigo;
-	//private LinkedList<Video> recientes;
+	private LinkedList<Video> recientes;
+	private LinkedList<ListaReproduccion> listasVideos;
 	
 	
 	public Usuario(String nombre, String apellidos, String email, String usuario, String contraseña, Date fechaNacimiento) {
@@ -26,7 +27,8 @@ public class Usuario {
 		this.contraseña = contraseña;
 		this.fechaNacimiento = fechaNacimiento;
 		premium = false;
-		//recientes = new LinkedList<Video>();
+		listasVideos = new LinkedList<ListaReproduccion>();
+		recientes = new LinkedList<Video>();
 	}
 
 
@@ -109,9 +111,14 @@ public class Usuario {
 		this.fechaNacimiento = fechaNacimiento;
 	}
 
-/*
+
 	public List<Video> getRecientes() {
 		return new LinkedList<Video>(recientes);
 	}
-*/
+
+
+	public List<ListaReproduccion> getListasVideos() {
+		return new LinkedList<ListaReproduccion>(listasVideos);
+	}
+	
 }
