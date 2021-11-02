@@ -132,5 +132,4 @@ public class Usuario {
 		}
 		recientes.addFirst(reciente);
 	}
-	
 }
