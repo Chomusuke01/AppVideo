@@ -15,6 +15,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
@@ -23,6 +24,8 @@ import javax.swing.border.Border;
 import javax.swing.border.MatteBorder;
 
 import com.toedter.calendar.JDateChooser;
+
+import umu.tds.AppVideo.controlador.ControladorAppVideo;
 
 
 public class RegistroView {
@@ -363,7 +366,13 @@ public class RegistroView {
 				boolean OK = false;
 				OK = checkFields();
 				if (OK) {
-					
+					ControladorAppVideo.getUnicaInstancia().registrarUsuario(txtUsuario.getText(), txtNombre.getText(), new String(txtContraseña.getPassword()), txtEmail.getText(),
+							txtApellidos.getText(), fechaNacimiento.getDate());
+					JOptionPane.showMessageDialog(frmRegistro, "Asistente registrado correctamente.", "Registro",
+							JOptionPane.INFORMATION_MESSAGE);
+					LoginView loginView = new LoginView();
+					loginView.mostrarVentana();
+					frmRegistro.dispose();
 				}
 			}
 		});

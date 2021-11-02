@@ -12,10 +12,13 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+
+import umu.tds.AppVideo.controlador.ControladorAppVideo;
 
 public class LoginView {
 
@@ -121,9 +124,18 @@ public class LoginView {
 	private void crearManejadorBotonLogin(JButton btnLogin) {
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				AppView appView = new AppView();
-				appView.mostrarVentana();
-				frmLogin.dispose();
+				
+				boolean login = ControladorAppVideo.getUnicaInstancia().loginUsuario(textUsuario.getText(), new String(textPassword.getPassword()));
+				
+				if (login) {
+					AppView appView = new AppView();
+					appView.mostrarVentana();
+					frmLogin.dispose();
+				}
+				else {
+					JOptionPane.showMessageDialog(frmLogin, "Nombre de usuario o contraseña no valido",
+							"Error", JOptionPane.ERROR_MESSAGE);
+				}
 			}
 		});
 	}

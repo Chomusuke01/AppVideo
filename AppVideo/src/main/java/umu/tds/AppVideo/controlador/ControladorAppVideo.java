@@ -18,9 +18,14 @@ public class ControladorAppVideo {
 	
 
 	private ControladorAppVideo() {
-		inicializarAdaptadores(); // debe ser la primera linea para evitar error
-								  // de sincronización
+		inicializarAdaptadores(); 
 		inicializarCatalogos();
+	}
+	
+	public static ControladorAppVideo getUnicaInstancia() {
+		if (unicaInstancia == null)
+			unicaInstancia = new ControladorAppVideo();
+		return unicaInstancia;
 	}
 	
 	private void inicializarAdaptadores() {
@@ -37,13 +42,6 @@ public class ControladorAppVideo {
 		catalogoUsuarios = CatalogoUsuarios.getUnicaInstancia();
 	}
 	
-	public static ControladorAppVideo getUnicaInstancia() {
-		if (unicaInstancia == null)
-			unicaInstancia = new ControladorAppVideo();
-		return unicaInstancia;
-	}
-	
-	
 	public void registrarUsuario(String usuario, String nombre,String contraseña, String email, String apellidos, Date fecha_nacimiento) {
 
 		Usuario u = new Usuario(nombre, apellidos, email, usuario, contraseña, fecha_nacimiento);
@@ -51,4 +49,16 @@ public class ControladorAppVideo {
 		catalogoUsuarios.addUsuario(u);
 	}
 	
+	public boolean exiteUsuario(String usuario) {
+		return catalogoUsuarios.getUsuario(usuario) != null;
+	}
+	
+	public boolean loginUsuario (String usuario, String contraseña) {
+		
+		Usuario u = catalogoUsuarios.getUsuario(usuario);
+		if (usuario != null && u.getContraseña().equals(contraseña))
+			return true;
+		
+		return false;
+	}
 }
