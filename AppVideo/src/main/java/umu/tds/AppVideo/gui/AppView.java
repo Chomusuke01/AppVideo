@@ -26,6 +26,7 @@ public class AppView {
 	private JButton btnLogOut;
 	private JButton btnPremium;
 	private JPanel panelExplorar;
+	private JPanel panelNuevaLista;
 	
 	public AppView() {
 		initialize();
@@ -47,6 +48,8 @@ public class AppView {
 		frmApp.getContentPane().add(panelPrincipal,BorderLayout.CENTER);
 		panelExplorar = new PanelExplorar();
 		panelPrincipal.add(panelExplorar,"panelExplorar");
+		panelNuevaLista = new PanelNuevaLista();
+		panelPrincipal.add(panelNuevaLista,"panelNuevaLista");
 	}
 	
 	private JPanel addPanelPrincipal() {

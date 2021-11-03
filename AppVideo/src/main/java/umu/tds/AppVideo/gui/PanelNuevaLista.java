@@ -13,6 +13,10 @@ import java.awt.event.ActionEvent;
 import java.awt.Color;
 
 public class PanelNuevaLista extends JPanel {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JTextField textField_1;
 	private JTextField textField;
 
