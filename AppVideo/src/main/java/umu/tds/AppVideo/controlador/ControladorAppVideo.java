@@ -56,7 +56,7 @@ public class ControladorAppVideo {
 	public boolean loginUsuario (String usuario, String contraseña) {
 		
 		Usuario u = catalogoUsuarios.getUsuario(usuario);
-		if (usuario != null && u.getContraseña().equals(contraseña))
+		if (u != null && u.getContraseña().equals(contraseña))
 			return true;
 		
 		return false;

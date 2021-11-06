@@ -3,7 +3,7 @@ package umu.tds.AppVideo.persistencia;
 public abstract class FactoriaDAO {
 	private static FactoriaDAO unicaInstancia;
 	
-	public static final String DAO_TDS = "persistencia.TDSFactoriaDAO";
+	public static final String DAO_TDS = "umu.tds.AppVideo.persistencia.TDSFactoriaDAO";
 		
 	/** 
 	 * Crea un tipo de factoria DAO.
