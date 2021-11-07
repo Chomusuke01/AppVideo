@@ -366,13 +366,19 @@ public class RegistroView {
 				boolean OK = false;
 				OK = checkFields();
 				if (OK) {
-					ControladorAppVideo.getUnicaInstancia().registrarUsuario(txtUsuario.getText(), txtNombre.getText(), new String(txtContraseña.getPassword()), txtEmail.getText(),
-							txtApellidos.getText(), fechaNacimiento.getDate());
-					JOptionPane.showMessageDialog(frmRegistro, "Asistente registrado correctamente.", "Registro",
-							JOptionPane.INFORMATION_MESSAGE);
-					LoginView loginView = new LoginView();
-					loginView.mostrarVentana();
-					frmRegistro.dispose();
+					if (ControladorAppVideo.getUnicaInstancia().exiteUsuario(txtUsuario.getText())) {
+						JOptionPane.showMessageDialog(frmRegistro, "El usuario " + txtUsuario.getText() + " ya existe", "Registro",
+								JOptionPane.ERROR_MESSAGE);
+					}else {
+						ControladorAppVideo.getUnicaInstancia().registrarUsuario(txtUsuario.getText(), txtNombre.getText(), new String(txtContraseña.getPassword()), txtEmail.getText(),
+								txtApellidos.getText(), fechaNacimiento.getDate());
+						
+						JOptionPane.showMessageDialog(frmRegistro, "Usuario registrado correctamente.", "Registro",
+								JOptionPane.INFORMATION_MESSAGE);
+						LoginView loginView = new LoginView();
+						loginView.mostrarVentana();
+						frmRegistro.dispose();
+					}
 				}
 			}
 		});

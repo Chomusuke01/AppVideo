@@ -26,11 +26,10 @@ public class Usuario {
 		this.usuario = usuario;
 		this.contraseña = contraseña;
 		this.fechaNacimiento = fechaNacimiento;
-		premium = false;
+		this.premium = false;
 		listasVideos = new LinkedList<ListaReproduccion>();
 		recientes = new LinkedList<Video>();
 	}
-
 
 	public int getCodigo() {
 		return codigo;

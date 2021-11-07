@@ -4,6 +4,7 @@ package umu.tds.AppVideo.controlador;
 import java.util.Date;
 
 import umu.tds.AppVideo.modelo.CatalogoUsuarios;
+import umu.tds.AppVideo.modelo.CatalogoVideos;
 import umu.tds.AppVideo.modelo.Usuario;
 import umu.tds.AppVideo.persistencia.DAOException;
 import umu.tds.AppVideo.persistencia.FactoriaDAO;
@@ -15,7 +16,8 @@ public class ControladorAppVideo {
 	private IAdaptadorUsuarioDAO adaptadorUsuario;
 
 	private CatalogoUsuarios catalogoUsuarios;
-	
+	private CatalogoVideos catalogoVideos;
+	private Usuario usuarioActual;
 
 	private ControladorAppVideo() {
 		inicializarAdaptadores(); 
@@ -40,6 +42,7 @@ public class ControladorAppVideo {
 	
 	private void inicializarCatalogos() {
 		catalogoUsuarios = CatalogoUsuarios.getUnicaInstancia();
+		catalogoVideos = CatalogoVideos.getUnicaInstancia();
 	}
 	
 	public void registrarUsuario(String usuario, String nombre,String contraseña, String email, String apellidos, Date fecha_nacimiento) {
@@ -56,9 +59,22 @@ public class ControladorAppVideo {
 	public boolean loginUsuario (String usuario, String contraseña) {
 		
 		Usuario u = catalogoUsuarios.getUsuario(usuario);
-		if (u != null && u.getContraseña().equals(contraseña))
+		if (u != null && u.getContraseña().equals(contraseña)) {
+			usuarioActual = u;
 			return true;
-		
+		}
 		return false;
 	}
+	
+	public boolean usuarioPremium() {
+		
+		if (usuarioActual.isPremium()) {
+			usuarioActual.setPremium(false);
+			adaptadorUsuario.modificarUsuario(usuarioActual);
+			return true;
+		}
+		usuarioActual.setPremium(true);
+		adaptadorUsuario.modificarUsuario(usuarioActual);
+		return false;
+	}	
 }

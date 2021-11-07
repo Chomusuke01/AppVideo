@@ -9,11 +9,15 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import umu.tds.AppVideo.controlador.ControladorAppVideo;
+
 public class AppView {
 
 
@@ -110,6 +114,7 @@ public class AppView {
 		
 		btnPremium = new JButton("PREMIUM");
 		btnPremium.setFont(new Font("Tahoma", Font.BOLD, 11));
+		crearManejadorBotonPremium(btnPremium);
 		panelbtn2.add(btnPremium);
 		
 		return panel_Norte;
@@ -129,11 +134,23 @@ public class AppView {
 			}
 		});
 	}
-	/*
-	private void crearManejadorBotonExplorar(JButton btnExplorars) {
-		
+	
+	private void crearManejadorBotonPremium(JButton btnPremium) {
+		btnPremium.addActionListener(new ActionListener () {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				boolean premium = ControladorAppVideo.getUnicaInstancia().usuarioPremium();
+				
+				if (premium) {
+					JOptionPane.showMessageDialog(frmApp, "Has dejado de ser un usuario PREMIUM",
+							"PREMIUM", JOptionPane.INFORMATION_MESSAGE);
+				}else {
+					JOptionPane.showMessageDialog(frmApp, "Ahora eres un usuario PREMIUM",
+							"PREMIUM", JOptionPane.INFORMATION_MESSAGE);
+				}
+			}	
+		});
 	}
-	*/
 }
 
 

@@ -94,7 +94,7 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO{
 		String contraseña = servPersistencia.recuperarPropiedadEntidad(eUsuario, "contraseña");
 		String apellidos = servPersistencia.recuperarPropiedadEntidad(eUsuario, "apellidos");
 		String email = servPersistencia.recuperarPropiedadEntidad(eUsuario, "email");
-		
+		boolean premium = Boolean.valueOf(servPersistencia.recuperarPropiedadEntidad(eUsuario, "premium"));
 		Date fecha_nacimiento = null;
 		
 		try {
@@ -106,6 +106,7 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO{
 		Usuario u = new Usuario(nombre, apellidos, email, usuario, contraseña, fecha_nacimiento);
 		
 		u.setCodigo(eUsuario.getId());
+		u.setPremium(premium);
 		
 		PoolDAO.getUnicaInstancia().addObjeto(codigo, u);
 		
@@ -133,6 +134,36 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO{
 		servPersistencia.borrarEntidad(eUsuario);
 	}
 	
+	
+	@Override
+	public void modificarUsuario(Usuario u) {
+		Entidad eUsuario = servPersistencia.recuperarEntidad(u.getCodigo());
+
+		for (Propiedad prop : eUsuario.getPropiedades()) {
+			if (prop.getNombre().equals("codigo")) {
+				prop.setValor(String.valueOf(u.getCodigo()));
+			} else if (prop.getNombre().equals("usuario")) {
+				prop.setValor(u.getUsuario());
+			} else if (prop.getNombre().equals("nombre")) {
+				prop.setValor(u.getNombre());
+			} else if (prop.getNombre().equals("apellidos")) {
+				prop.setValor(u.getApellidos());
+			} else if (prop.getNombre().equals("email")) {
+				prop.setValor(u.getEmail());
+			} else if (prop.getNombre().equals("contraseña")) {
+				prop.setValor(u.getContraseña());
+			} else if (prop.getNombre().equals("fecha_nacimiento")) {
+				prop.setValor(dateFormat.format(u.getFechaNacimiento()));
+			} else if (prop.getNombre().equals("listasReproduccion")) {
+				prop.setValor(obtenerCodigosListaRep(u.getListasVideos()));
+			} else if (prop.getNombre().equals("recientes")) {
+				prop.setValor(obtenerCodigosVideosRecientes(u.getRecientes()));
+			} else if (prop.getNombre().equals("premium")) {
+				prop.setValor(String.valueOf(u.isPremium()));
+			}
+			servPersistencia.modificarPropiedad(prop);
+		}
+	}
 	
 	//----------------------Funciones auxiliares-----------------------//
 
@@ -181,4 +212,5 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO{
 		
 		return listaRep;
 	}
+
 }

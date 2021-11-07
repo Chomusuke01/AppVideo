@@ -27,7 +27,6 @@ public class Video {
 		return codigo;
 	}
 
-
 	public void setCodigo(int codigo) {
 		this.codigo = codigo;
 	}
