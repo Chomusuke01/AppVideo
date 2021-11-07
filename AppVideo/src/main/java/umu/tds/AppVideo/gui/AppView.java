@@ -27,6 +27,7 @@ public class AppView {
 	private JButton btnPremium;
 	private JPanel panelExplorar;
 	private JPanel panelNuevaLista;
+	private JPanel panelMisListas;
 	
 	public AppView() {
 		initialize();
@@ -50,6 +51,8 @@ public class AppView {
 		panelPrincipal.add(panelExplorar,"panelExplorar");
 		panelNuevaLista = new PanelNuevaLista();
 		panelPrincipal.add(panelNuevaLista,"panelNuevaLista");
+		panelMisListas = new PanelMisListas();
+		panelPrincipal.add(panelMisListas,"panelMisListas");
 	}
 	
 	private JPanel addPanelPrincipal() {
