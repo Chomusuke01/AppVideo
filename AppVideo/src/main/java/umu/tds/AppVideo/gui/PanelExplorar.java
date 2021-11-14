@@ -3,13 +3,31 @@ package umu.tds.AppVideo.gui;
 import java.awt.Dimension;
 
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+
 import java.awt.BorderLayout;
 import java.awt.GridBagLayout;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.List;
+
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
+
+import umu.tds.AppVideo.controlador.ControladorAppVideo;
+import umu.tds.AppVideo.modelo.Video;
+
 import javax.swing.JButton;
 import java.awt.Color;
 
@@ -18,8 +36,10 @@ public class PanelExplorar extends JPanel {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	//private JPanel panelExplorar;
 	private JTextField txtBusqueda;
+	private JTable resultadoBusqueda;
+	private static final int NUM_COLUMNAS_RESULTADO = 4;
+	private List<Video> busquedaActual;
 	
 	public PanelExplorar() {
 		initialize();
@@ -111,6 +131,7 @@ public class PanelExplorar extends JPanel {
 		txtBusqueda.setColumns(10);
 		
 		JButton btnBuscar = new JButton("Buscar");
+		crearManejadorBtnBuscar(btnBuscar,this);
 		GridBagConstraints gbc_btnBuscar = new GridBagConstraints();
 		gbc_btnBuscar.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnBuscar.insets = new Insets(0, 0, 5, 5);
@@ -126,9 +147,145 @@ public class PanelExplorar extends JPanel {
 		gbc_btnNuevaBusqueda.gridx = 5;
 		gbc_btnNuevaBusqueda.gridy = 3;
 		panelBusqueda.add(btnNuevaBusqueda, gbc_btnNuevaBusqueda);
+		crearManejadorBtnNuevBusqueda(btnNuevaBusqueda);
 		
 		JPanel panelResultados = new JPanel();
-		panelResultados.setBackground(Color.GRAY);
 		panelPrincipal.add(panelResultados, BorderLayout.CENTER);
+		
+		resultadoBusqueda = new JTable();
+		resultadoBusqueda.getTableHeader().setReorderingAllowed(false);
+		resultadoBusqueda.setShowVerticalLines(false);
+		resultadoBusqueda.setShowHorizontalLines(false);
+		resultadoBusqueda.setShowGrid(false);
+		resultadoBusqueda.setBackground(new Color(240,240,240));
+		resultadoBusqueda.setSelectionForeground(new Color(240,240,240));
+		resultadoBusqueda.setSelectionBackground(new Color(240,240,240));
+		
+		resultadoBusqueda.setRowHeight(150);
+		resultadoBusqueda.setDefaultRenderer(MiniaturaVideo.class, new MiniaturaVideoTableRenderer());
+		resizeColumnWidth(resultadoBusqueda);
+		crearEventoRaton(resultadoBusqueda);
+
+		JScrollPane scroll=new JScrollPane(resultadoBusqueda);
+		scroll.setMinimumSize(new Dimension(940,480));
+		scroll.setPreferredSize(new Dimension(940,480));
+		scroll.setMaximumSize(new Dimension(940,480));
+		scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		panelResultados.add(scroll);
+		
+	}
+	
+	private class MyTableModel extends DefaultTableModel {
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 1L;
+        public MyTableModel(Object[][] data, Object[] columnNames) {
+            super(data, columnNames);
+        }
+
+        @Override
+        public Class<?> getColumnClass(int columnIndex) {
+            Class<?> clazz = Object.class;
+            Object aux = getValueAt(0, columnIndex);
+            if (aux != null) {
+                clazz = aux.getClass();
+            }
+
+            return clazz;
+        }
+        @Override
+        public boolean isCellEditable (int row, int column)
+           {
+               return false;
+           }
+    }
+	
+	private void resizeColumnWidth(JTable table) {
+	    //Se obtiene el modelo de la columna
+	    TableColumnModel columnModel = table.getColumnModel();
+	    int width = 230;
+	    //Se obtiene el total de las columnas
+	    for (int column = 0; column < table.getColumnCount(); column++) {
+	        columnModel.getColumn(column).setMinWidth(width);
+	    }
+	}
+	
+	private Object [][] obtenerTablaResultados (List<Video> videos) {
+		
+		Object [][] data = new Object [(int) Math.ceil((double)videos.size()/NUM_COLUMNAS_RESULTADO)][NUM_COLUMNAS_RESULTADO];
+		int pos = 0;
+		int fila = 0;
+		int columna = 0;
+		while (pos < videos.size()) {
+			data [fila][columna] = new MiniaturaVideo(videos.get(pos).getTitulo(), videos.get(pos).getUrl(), pos);
+			pos++;
+			columna++;
+			if (columna == NUM_COLUMNAS_RESULTADO) {
+				fila++;
+				columna = 0;
+			}
+		}
+		return data;
+	}
+	
+	private void crearManejadorBtnBuscar(JButton btnBuscar, JPanel panel) {
+		btnBuscar.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (txtBusqueda.getText().trim().isEmpty()) {
+					// Mensaje de error
+					JOptionPane.showMessageDialog(panel, "El campo de búsqueda está vacio",
+							"Error búsqueda", JOptionPane.ERROR_MESSAGE);
+					// Puede que tengas etiquetas seleccionadas, por lo que esa condición cambiará en un futuro.
+				}else {
+					// Limpiar la búsqueda anterior
+					limpiarTabla();
+					// Realizar busqueda, que cuando tengas las etiquetas seguramente cambie un poquito.
+					List<Video> resultados = ControladorAppVideo.getUnicaInstancia().buscarVideos(txtBusqueda.getText());
+					if (resultados.size() == 0) {
+						JOptionPane.showMessageDialog(panel, "No se han encontrado resultados para " + "\"" + txtBusqueda.getText() + "\"",
+								"Buscar", JOptionPane.INFORMATION_MESSAGE);
+					}else {
+						Object [][] data = obtenerTablaResultados(resultados);
+						resultadoBusqueda.setModel(new MyTableModel(data, new String [] {"", "", "",""}));
+						busquedaActual = resultados;
+					}
+				}
+			}
+		});
+	}
+	
+	private void limpiarTabla() {
+		resultadoBusqueda.setModel(new DefaultTableModel());
+	}
+	
+	private void crearManejadorBtnNuevBusqueda(JButton btn) {
+		btn.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				limpiarTabla();
+				txtBusqueda.setText("");
+				busquedaActual = null;
+			}
+		});
+	}
+	
+	private void crearEventoRaton(JTable tabla) {
+		tabla.addMouseListener(new MouseAdapter() {
+			public void mouseClicked (MouseEvent e) {
+				if (e.getClickCount() == 2) {
+					int videoSeleccionado = tabla.getSelectedRow()*NUM_COLUMNAS_RESULTADO + tabla.getSelectedColumn();
+					if (videoSeleccionado < busquedaActual.size())
+						AppView.reproducirVideo(busquedaActual.get(videoSeleccionado).getUrl());
+				}	
+			}
+		});
 	}
 }
+
+//Object [][] data = new Object [][] {{new MiniaturaVideo("El conejo","https://www.youtube.com/watch?v=twayP7FqZmc",0),
+//new MiniaturaVideo("El conejo1","https://www.youtube.com/watch?v=twayP7FqZmc",1),
+//new MiniaturaVideo("El conejo2","https://www.youtube.com/watch?v=twayP7FqZmc",2)}};

@@ -76,8 +76,9 @@ public class AdaptadorVideoTDS implements IAdaptadorVideoDAO {
 		String titulo = servPersistencia.recuperarPropiedadEntidad(eVideo, "titulo");
 		int numReproducciones = Integer.parseInt(servPersistencia.recuperarPropiedadEntidad(eVideo, "numReproducciones"));
 		
-		Video video = new Video(url, titulo,numReproducciones);
+		Video video = new Video(url, titulo);
 		video.setCodigo(codigo);
+		video.setNumReproducciones(numReproducciones);
 		
 		PoolDAO.getUnicaInstancia().addObjeto(codigo, video); // Creo que no hace falta .
 		

@@ -2,13 +2,16 @@ package umu.tds.AppVideo.controlador;
 
 
 import java.util.Date;
+import java.util.List;
 
 import umu.tds.AppVideo.modelo.CatalogoUsuarios;
 import umu.tds.AppVideo.modelo.CatalogoVideos;
 import umu.tds.AppVideo.modelo.Usuario;
+import umu.tds.AppVideo.modelo.Video;
 import umu.tds.AppVideo.persistencia.DAOException;
 import umu.tds.AppVideo.persistencia.FactoriaDAO;
 import umu.tds.AppVideo.persistencia.IAdaptadorUsuarioDAO;
+
 public class ControladorAppVideo {
 	
 	private static ControladorAppVideo unicaInstancia;
@@ -76,5 +79,9 @@ public class ControladorAppVideo {
 		usuarioActual.setPremium(true);
 		adaptadorUsuario.modificarUsuario(usuarioActual);
 		return false;
-	}	
+	}
+	
+	public List<Video> buscarVideos(String tituloVideo){
+		return catalogoVideos.realizarBusqueda(tituloVideo);
+	}
 }

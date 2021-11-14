@@ -1,5 +1,6 @@
 package umu.tds.AppVideo.modelo;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -11,15 +12,16 @@ public class Video {
 	private LinkedList<Etiqueta> etiquetas;
 	
 	
-	public Video(String url, String titulo) {
-		this(url,titulo,0); //TODO NO SE ....
-	}
 
-	public Video(String url, String titulo, int numReproducciones) {
+	public Video(String url, String titulo, Etiqueta...etiquetas ) {
 		this.url = url;
 		this.titulo = titulo;
-		etiquetas = new LinkedList<Etiqueta>(); //TODO Un video tiene al menos una etiqueta, pero no se que etiqueta poner.
-		this.numReproducciones = numReproducciones;
+		this.etiquetas = new LinkedList<Etiqueta>(); //TODO Un video tiene al menos una etiqueta, pero no se que etiqueta poner.
+		
+		Arrays.asList(etiquetas).stream()
+			.forEach(e -> this.etiquetas.add(e));
+		
+		this.numReproducciones = 0;
 		codigo = 0;
 	}
 
@@ -65,6 +67,10 @@ public class Video {
 		return numReproducciones;
 	}
 
+
+	public void setNumReproducciones(int numReproducciones) {
+		this.numReproducciones = numReproducciones;
+	}
 
 	public void aumentarNumReproducciones() {
 		numReproducciones += 1;

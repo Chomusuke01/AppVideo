@@ -1,5 +1,6 @@
 package umu.tds.AppVideo.modelo;
 
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -19,7 +20,8 @@ public class CatalogoVideos {
 		try {
 			dao = FactoriaDAO.getInstancia(FactoriaDAO.DAO_TDS);
   			adaptadorVideo = dao.getVideoDAO();
-  			videos = adaptadorVideo.recuperarTodosVideos().stream().collect(Collectors.toMap(v -> v.getUrl(), v -> v)); // Posible explosion del codigo.
+  			videos = adaptadorVideo.recuperarTodosVideos().stream()
+  					.collect(Collectors.toMap(v -> v.getUrl(), v -> v)); // Posible explosion del codigo.
   		} catch (DAOException eDAO) {
   			eDAO.printStackTrace();
   		}
@@ -39,5 +41,12 @@ public class CatalogoVideos {
 	
 	public void removeViedo(Video video) {
 		videos.remove(video.getUrl());
+	}
+	
+	public List<Video> realizarBusqueda(String tituloVideo){
+		
+		return videos.values().stream()
+				.filter(v -> v.getTitulo().contains(tituloVideo))
+				.collect(Collectors.toList());
 	}
 }
