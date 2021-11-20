@@ -1,6 +1,8 @@
 package umu.tds.AppVideo.gui;
 
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
@@ -10,12 +12,16 @@ import java.awt.event.ActionListener;
 import java.util.List;
 
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.table.DefaultTableModel;
 
 import umu.tds.AppVideo.controlador.ControladorAppVideo;
 import umu.tds.AppVideo.modelo.Video;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import java.awt.Color;
 import java.awt.BorderLayout;
@@ -25,6 +31,7 @@ public class PanelNuevaLista extends JPanel {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	private static final int NUM_COLUMNAS_RESULTADO = 4;
 	private JTextField txtLista;
 	private JTextField txtBusqueda;
 	private JPanel panelOeste;
@@ -42,6 +49,9 @@ public class PanelNuevaLista extends JPanel {
 	private JButton btnNuevaBusqueda;
 	private JPanel panelPrincipal;
 	private List<Video> listaActual;
+	private List<Video> busquedaActual;
+	private JList<MiniaturaVideo> listaRep;
+	private TablaBusqueda resultadoBusqueda;
 
 	/**
 	 * Create the panel.
@@ -168,6 +178,7 @@ public class PanelNuevaLista extends JPanel {
 		gbc_btnNewButton_5.gridx = 18;
 		gbc_btnNewButton_5.gridy = 1;
 		panelNorte.add(btnBuscarVideos, gbc_btnNewButton_5);
+		crearManejadorBtnBuscarVideos(btnBuscarVideos);
 		
 		btnNuevaBusqueda = new JButton("Nueva búsqueda");
 		GridBagConstraints gbc_btnNewButton_6 = new GridBagConstraints();
@@ -178,7 +189,48 @@ public class PanelNuevaLista extends JPanel {
 		
 		panelPrincipal = new JPanel();
 		panelCentro.add(panelPrincipal, BorderLayout.CENTER);
-
+		
+		listaRep = new JList<MiniaturaVideo>();
+		JScrollPane scrollLista=new JScrollPane(listaRep);
+		
+		scrollLista.setMinimumSize(new Dimension(220,400));
+		scrollLista.setPreferredSize(new Dimension(220,400));
+		scrollLista.setMaximumSize(new Dimension(220,900));
+		
+		scrollLista.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		panelResultados.add(scrollLista);
+		
+		resultadoBusqueda = new TablaBusqueda(MiniaturaVideo.class, new MiniaturaVideoTableRenderer(), 150, 120, NUM_COLUMNAS_RESULTADO);
+		JScrollPane scrollBusqueda=new JScrollPane(resultadoBusqueda);
+		scrollBusqueda.setMinimumSize(new Dimension(850,480));
+		scrollBusqueda.setPreferredSize(new Dimension(850,480));
+		scrollBusqueda.setMaximumSize(new Dimension(850,480));
+		panelPrincipal.add(scrollBusqueda);
+		
+	}
+	
+	private void crearManejadorBtnBuscarVideos(JButton boton) {
+		
+		boton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (txtBusqueda.getText().trim().isEmpty()) {
+					JOptionPane.showMessageDialog(panelPrincipal, "Campo de búsqueda vacio",
+							"Error búsqueda", JOptionPane.ERROR_MESSAGE);
+				}else {
+					List<Video> resultados = ControladorAppVideo.getUnicaInstancia().buscarVideos(txtBusqueda.getText());
+					if (resultados.size() == 0) {
+						JOptionPane.showMessageDialog(panelPrincipal, "No se han encontrado resultados para " + "\"" + txtBusqueda.getText() + "\"",
+								"Buscar", JOptionPane.INFORMATION_MESSAGE);
+					}else {
+						Object [][] data =  resultadoBusqueda.obtenerTablaResultados(resultados,150,120);
+						resultadoBusqueda.setModel(new MyTableModel(data, new String [] {"", "", "",""}));
+						busquedaActual = resultados;
+					}
+				}
+			}
+		});
 	}
 	
 	
@@ -198,16 +250,41 @@ public class PanelNuevaLista extends JPanel {
 						if (res == JOptionPane.YES_OPTION) {
 							ControladorAppVideo.getUnicaInstancia().añadirNuevaLista(txtLista.getText());
 						}
-						
 					}else {
 						//Mostrar lista
-						JOptionPane.showMessageDialog(panelPrincipal, "Lista encontrada",
-								"Error lista", JOptionPane.ERROR_MESSAGE);
+						DefaultListModel<MiniaturaVideo> model=new DefaultListModel<MiniaturaVideo>();
+						listaActual.stream().forEach(v -> model.addElement(new MiniaturaVideo(v.getTitulo(),v.getUrl(),0,150,120)));
+//						model.addElement(new MiniaturaVideo("El conejo1","https://www.youtube.com/watch?v=twayP7FqZmc",0,150,120));
+						listaRep.setModel(model);
+						listaRep.setCellRenderer(new MiniaturaVideoListRenderer());
+						listaRep.setFixedCellHeight(120);
+						listaRep.setFixedCellWidth(150);
 					}
-				}
-				
+				}	
 			}
 		});
 	}
+	
+	private class MyTableModel extends DefaultTableModel {
+        private static final long serialVersionUID = 1L;
+        public MyTableModel(Object[][] data, Object[] columnNames) {
+            super(data, columnNames);
+        }
 
+        @Override
+        public Class<?> getColumnClass(int columnIndex) {
+            Class<?> clazz = Object.class;
+            Object aux = getValueAt(0, columnIndex);
+            if (aux != null) {
+                clazz = aux.getClass();
+            }
+
+            return clazz;
+        }
+        @Override
+        public boolean isCellEditable (int row, int column)
+           {
+               return false;
+           }
+    }
 }

@@ -107,5 +107,6 @@ public class ControladorAppVideo {
 		usuarioActual.addListaRep(listaRep);
 		adaptadorListaReproduccion.registrarListaRep(listaRep); /// Preguntar
 		adaptadorUsuario.modificarUsuario(usuarioActual);
+		
 	}
 }

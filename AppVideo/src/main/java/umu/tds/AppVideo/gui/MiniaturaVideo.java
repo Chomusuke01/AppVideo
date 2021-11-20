@@ -40,12 +40,13 @@ public class MiniaturaVideo extends JPanel{
 		super.setBackground(bg);
 	}
 	
-	public MiniaturaVideo(String titulo, String url, int id) {
+	//300,240
+	public MiniaturaVideo(String titulo, String url, int id,int width, int height) {
 		
 		this.id = id;
-		this.setMaximumSize(new Dimension (300,240));
-		this.setMinimumSize(new Dimension (300,240));
-		this.setPreferredSize(new Dimension (300,240));
+		this.setMaximumSize(new Dimension (width,height));
+		this.setMinimumSize(new Dimension (width,height));
+		this.setPreferredSize(new Dimension (width,height));
 		setLayout(new BorderLayout(0, 0));
 		
 		panelMiniatura = new JPanel();

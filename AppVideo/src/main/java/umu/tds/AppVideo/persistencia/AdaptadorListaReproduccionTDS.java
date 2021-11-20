@@ -81,6 +81,7 @@ public class AdaptadorListaReproduccionTDS implements IAdaptadorListaReproduccio
 		nombre = servPersistencia.recuperarPropiedadEntidad(eListaRep, NOMBRE);
 		
 		ListaReproduccion listaRep = new ListaReproduccion(nombre);
+		listaRep.setCodigo(codigo); // ESTA LINEA DE MIERDA ME HA HECHO PERDER TODA LA MAÑANA 
 		
 		PoolDAO.getUnicaInstancia().addObjeto(codigo, listaRep);
 		

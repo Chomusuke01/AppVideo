@@ -24,13 +24,11 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumnModel;
 
 import umu.tds.AppVideo.controlador.ControladorAppVideo;
 import umu.tds.AppVideo.modelo.Video;
 
 import javax.swing.JButton;
-import java.awt.Color;
 
 public class PanelExplorar extends JPanel {
 	/**
@@ -38,7 +36,7 @@ public class PanelExplorar extends JPanel {
 	 */
 	private static final long serialVersionUID = 1L;
 	private JTextField txtBusqueda;
-	private JTable resultadoBusqueda;
+	private TablaBusqueda resultadoBusqueda;
 	private static final int NUM_COLUMNAS_RESULTADO = 4;
 	private List<Video> busquedaActual;
 	private JPanel panelEtiquetas;
@@ -49,13 +47,11 @@ public class PanelExplorar extends JPanel {
 	private JPanel panelExplorar;
 	
 	
-	
 	public PanelExplorar() {
 		initialize();
 	}
 	
 	public void initialize() {
-		//panelExplorar = new JPanel();
 		this.setMaximumSize(new Dimension(970,620));
 		this.setMinimumSize(new Dimension(970,620));
 		this.setPreferredSize(new Dimension(970,620));
@@ -169,18 +165,7 @@ public class PanelExplorar extends JPanel {
 		panelResultados = new JPanel();
 		panelPrincipal.add(panelResultados, BorderLayout.CENTER);
 		
-		resultadoBusqueda = new JTable();
-		resultadoBusqueda.getTableHeader().setReorderingAllowed(false);
-		resultadoBusqueda.setShowVerticalLines(false);
-		resultadoBusqueda.setShowHorizontalLines(false);
-		resultadoBusqueda.setShowGrid(false);
-		resultadoBusqueda.setBackground(new Color(240,240,240));
-		resultadoBusqueda.setSelectionForeground(new Color(240,240,240));
-		resultadoBusqueda.setSelectionBackground(new Color(240,240,240));
-		
-		resultadoBusqueda.setRowHeight(150);
-		resultadoBusqueda.setDefaultRenderer(MiniaturaVideo.class, new MiniaturaVideoTableRenderer());
-		resizeColumnWidth(resultadoBusqueda);
+		resultadoBusqueda = new TablaBusqueda(MiniaturaVideo.class, new MiniaturaVideoTableRenderer(), 150, 230, NUM_COLUMNAS_RESULTADO);
 		crearEventoRaton(resultadoBusqueda);
 
 		JScrollPane scroll=new JScrollPane(resultadoBusqueda);
@@ -193,9 +178,6 @@ public class PanelExplorar extends JPanel {
 	}
 	
 	private class MyTableModel extends DefaultTableModel {
-        /**
-         * 
-         */
         private static final long serialVersionUID = 1L;
         public MyTableModel(Object[][] data, Object[] columnNames) {
             super(data, columnNames);
@@ -218,34 +200,6 @@ public class PanelExplorar extends JPanel {
            }
     }
 	
-	private void resizeColumnWidth(JTable table) {
-	    //Se obtiene el modelo de la columna
-	    TableColumnModel columnModel = table.getColumnModel();
-	    int width = 230;
-	    //Se obtiene el total de las columnas
-	    for (int column = 0; column < table.getColumnCount(); column++) {
-	        columnModel.getColumn(column).setMinWidth(width);
-	    }
-	}
-	
-	private Object [][] obtenerTablaResultados (List<Video> videos) {
-		
-		Object [][] data = new Object [(int) Math.ceil((double)videos.size()/NUM_COLUMNAS_RESULTADO)][NUM_COLUMNAS_RESULTADO];
-		int pos = 0;
-		int fila = 0;
-		int columna = 0;
-		while (pos < videos.size()) {
-			data [fila][columna] = new MiniaturaVideo(videos.get(pos).getTitulo(), videos.get(pos).getUrl(), pos);
-			pos++;
-			columna++;
-			if (columna == NUM_COLUMNAS_RESULTADO) {
-				fila++;
-				columna = 0;
-			}
-		}
-		return data;
-	}
-	
 	private void crearManejadorBtnBuscar(JButton btnBuscar, JPanel panel) {
 		btnBuscar.addActionListener(new ActionListener() {
 			
@@ -258,14 +212,14 @@ public class PanelExplorar extends JPanel {
 					// Puede que tengas etiquetas seleccionadas, por lo que esa condición cambiará en un futuro.
 				}else {
 					// Limpiar la búsqueda anterior
-					limpiarTabla();
+					resultadoBusqueda.limpiarTabla();
 					// Realizar busqueda, que cuando tengas las etiquetas seguramente cambie un poquito.
 					List<Video> resultados = ControladorAppVideo.getUnicaInstancia().buscarVideos(txtBusqueda.getText());
 					if (resultados.size() == 0) {
 						JOptionPane.showMessageDialog(panel, "No se han encontrado resultados para " + "\"" + txtBusqueda.getText() + "\"",
 								"Buscar", JOptionPane.INFORMATION_MESSAGE);
 					}else {
-						Object [][] data = obtenerTablaResultados(resultados);
+						Object [][] data =  resultadoBusqueda.obtenerTablaResultados(resultados ,300, 240);
 						resultadoBusqueda.setModel(new MyTableModel(data, new String [] {"", "", "",""}));
 						busquedaActual = resultados;
 					}
@@ -274,16 +228,12 @@ public class PanelExplorar extends JPanel {
 		});
 	}
 	
-	private void limpiarTabla() {
-		resultadoBusqueda.setModel(new DefaultTableModel());
-	}
-	
 	private void crearManejadorBtnNuevBusqueda(JButton btn) {
 		btn.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				limpiarTabla();
+				resultadoBusqueda.limpiarTabla();
 				txtBusqueda.setText("");
 				busquedaActual = null;
 			}
