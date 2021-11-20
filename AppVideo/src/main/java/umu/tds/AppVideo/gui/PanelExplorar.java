@@ -7,6 +7,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
 import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.GridBagLayout;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -40,6 +41,14 @@ public class PanelExplorar extends JPanel {
 	private JTable resultadoBusqueda;
 	private static final int NUM_COLUMNAS_RESULTADO = 4;
 	private List<Video> busquedaActual;
+	private JPanel panelEtiquetas;
+	private JPanel panelPrincipal;
+	private JPanel reproductor;
+	private JPanel panelBusqueda;
+	private JPanel panelResultados;
+	private JPanel panelExplorar;
+	
+	
 	
 	public PanelExplorar() {
 		initialize();
@@ -52,7 +61,7 @@ public class PanelExplorar extends JPanel {
 		this.setPreferredSize(new Dimension(970,620));
 		this.setLayout(new BorderLayout(0, 0));
 		
-		JPanel panelEtiquetas = new JPanel();
+		panelEtiquetas = new JPanel();
 		this.add(panelEtiquetas, BorderLayout.EAST);
 		GridBagLayout gbl_panelEtiquetas = new GridBagLayout();
 		gbl_panelEtiquetas.columnWidths = new int[]{10, 0, 10, 0};
@@ -99,11 +108,19 @@ public class PanelExplorar extends JPanel {
 		gbc_textArea_1.gridy = 12;
 		panelEtiquetas.add(textArea_1, gbc_textArea_1);
 		
-		JPanel panelPrincipal = new JPanel();
-		this.add(panelPrincipal, BorderLayout.CENTER);
+		panelPrincipal = new JPanel();
+		
 		panelPrincipal.setLayout(new BorderLayout(0, 0));
 		
-		JPanel panelBusqueda = new JPanel();
+		panelExplorar = new JPanel();
+		panelExplorar.setLayout(new CardLayout(0,0));
+		panelExplorar.add(panelPrincipal,"principal");
+		
+		reproductor = new PanelReproductor();
+		panelExplorar.add(reproductor,"reproductor");
+		this.add(panelExplorar);
+		
+		panelBusqueda = new JPanel();
 		panelPrincipal.add(panelBusqueda, BorderLayout.NORTH);
 		GridBagLayout gbl_panelBusqueda = new GridBagLayout();
 		gbl_panelBusqueda.columnWidths = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -149,7 +166,7 @@ public class PanelExplorar extends JPanel {
 		panelBusqueda.add(btnNuevaBusqueda, gbc_btnNuevaBusqueda);
 		crearManejadorBtnNuevBusqueda(btnNuevaBusqueda);
 		
-		JPanel panelResultados = new JPanel();
+		panelResultados = new JPanel();
 		panelPrincipal.add(panelResultados, BorderLayout.CENTER);
 		
 		resultadoBusqueda = new JTable();
@@ -278,11 +295,21 @@ public class PanelExplorar extends JPanel {
 			public void mouseClicked (MouseEvent e) {
 				if (e.getClickCount() == 2) {
 					int videoSeleccionado = tabla.getSelectedRow()*NUM_COLUMNAS_RESULTADO + tabla.getSelectedColumn();
-					if (videoSeleccionado < busquedaActual.size())
-						AppView.reproducirVideo(busquedaActual.get(videoSeleccionado).getUrl());
+					CardLayout cl = null;
+					if (videoSeleccionado < busquedaActual.size()) {
+						((PanelReproductor) reproductor).reproducirVideo(AppMain.videoWeb,busquedaActual.get(videoSeleccionado));
+						ControladorAppVideo.getUnicaInstancia().nuevaReproduccion(busquedaActual.get(videoSeleccionado));
+						cl = ((CardLayout) panelExplorar.getLayout());
+						cl.show(panelExplorar, "reproductor");
+					}
 				}	
 			}
 		});
+	}
+	
+	public void cambiarExplorar() {
+		CardLayout cl = ((CardLayout) panelExplorar.getLayout());
+		cl.show(panelExplorar, "principal");
 	}
 }
 

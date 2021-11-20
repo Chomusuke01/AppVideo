@@ -3,6 +3,7 @@ package umu.tds.AppVideo.modelo;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Video {
 	private String url;
@@ -74,6 +75,10 @@ public class Video {
 
 	public void aumentarNumReproducciones() {
 		numReproducciones += 1;
+	}
+	
+	public List<String> getNombreEtiquetas(){
+		return etiquetas.stream().map(e -> e.getNombre()).collect(Collectors.toList());
 	}
 	
 }

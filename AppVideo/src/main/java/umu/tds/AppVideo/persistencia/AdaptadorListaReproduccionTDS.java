@@ -18,6 +18,9 @@ public class AdaptadorListaReproduccionTDS implements IAdaptadorListaReproduccio
 	
 	private static ServicioPersistencia servPersistencia;
 	private static AdaptadorListaReproduccionTDS unicaInstancia = null;
+	private static final String LISTA_REPRODUCCION = "lista_reproduccion";
+	private static final String NOMBRE = "nombre";
+	private static final String VIDEOS = "videos";
 	
 	public static AdaptadorListaReproduccionTDS getUnicaInstancia() { // patron singleton
 		if (unicaInstancia == null)
@@ -46,9 +49,9 @@ public class AdaptadorListaReproduccionTDS implements IAdaptadorListaReproduccio
 		listaRep.getVideos().stream().forEach(v -> adaptadorVideo.addVideo(v));
 		
 		eListaRep = new Entidad();
-		eListaRep.setNombre("listaReproduccion");
+		eListaRep.setNombre(LISTA_REPRODUCCION);
 		eListaRep.setPropiedades(new ArrayList<Propiedad>(Arrays.asList(
-				new Propiedad("nombre",listaRep.getNombre()), new Propiedad("videos",obtenerCodigosVideos(listaRep.getVideos())))));
+				new Propiedad(NOMBRE,listaRep.getNombre()), new Propiedad(VIDEOS,obtenerCodigosVideos(listaRep.getVideos())))));
 		
 		eListaRep = servPersistencia.registrarEntidad(eListaRep);
 		listaRep.setCodigo(eListaRep.getId());
@@ -75,13 +78,13 @@ public class AdaptadorListaReproduccionTDS implements IAdaptadorListaReproduccio
 		
 		eListaRep = servPersistencia.recuperarEntidad(codigo);
 		
-		nombre = servPersistencia.recuperarPropiedadEntidad(eListaRep, "nombre");
+		nombre = servPersistencia.recuperarPropiedadEntidad(eListaRep, NOMBRE);
 		
 		ListaReproduccion listaRep = new ListaReproduccion(nombre);
 		
 		PoolDAO.getUnicaInstancia().addObjeto(codigo, listaRep);
 		
-		obtenerVideosDesdeCodigos(servPersistencia.recuperarPropiedadEntidad(eListaRep, "videos")).stream().forEach(v -> listaRep.añadirVideo(v));
+		obtenerVideosDesdeCodigos(servPersistencia.recuperarPropiedadEntidad(eListaRep, VIDEOS)).stream().forEach(v -> listaRep.añadirVideo(v));
 		
 		return listaRep;
 	}
@@ -89,7 +92,7 @@ public class AdaptadorListaReproduccionTDS implements IAdaptadorListaReproduccio
 	@Override
 	public List<ListaReproduccion> recuperarTodasListas() {
 		
-		return servPersistencia.recuperarEntidades("listaReproduccion").stream()
+		return servPersistencia.recuperarEntidades(LISTA_REPRODUCCION).stream()
 				.map(listaRep -> recuperarListaReproduccion(listaRep.getId())).collect(Collectors.toList());
 	}
 
@@ -97,13 +100,13 @@ public class AdaptadorListaReproduccionTDS implements IAdaptadorListaReproduccio
 	
 	private String obtenerCodigosVideos(List<Video> videos) {
 		
-		String linea = "";
+		String aux = "";
 		
 		for(Video v : videos) {
-			linea += v.getCodigo() + " ";
+			aux += v.getCodigo() + " ";
 		}
 		
-		return linea.trim();
+		return aux.trim();
 		
 	}
 	

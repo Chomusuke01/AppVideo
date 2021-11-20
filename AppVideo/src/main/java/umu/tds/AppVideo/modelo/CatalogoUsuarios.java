@@ -1,5 +1,6 @@
 package umu.tds.AppVideo.modelo;
 
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -39,5 +40,10 @@ public class CatalogoUsuarios {
 	
 	public void removeUsuario(Usuario u) {
 		usuarios.remove(u.getUsuario());
+	}
+	
+	public List<Video> getListaReproduccion(String usuario, String lista){
+		
+		return usuarios.get(usuario).getVideosFromLista(lista);
 	}
 }

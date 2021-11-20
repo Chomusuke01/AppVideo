@@ -15,7 +15,11 @@ public class AdaptadorEtiquetaTDS implements IAdaptadorEtiquetaDAO {
 	
 	private static ServicioPersistencia servPersistencia;
 	private static AdaptadorEtiquetaTDS unicaInstancia;
-
+	private static final String ETIQUETA = "etiqueta";
+	private static final String NOMBRE = "nombre";
+	
+	
+	
 	public static AdaptadorEtiquetaTDS getUnicaInstancia() {
 		if (unicaInstancia == null)
 			return new AdaptadorEtiquetaTDS();
@@ -39,10 +43,10 @@ public class AdaptadorEtiquetaTDS implements IAdaptadorEtiquetaDAO {
 		
 		
 		eLabel = new Entidad();
-		eLabel.setNombre("etiqueta");
+		eLabel.setNombre(ETIQUETA);
 		
 		eLabel.setPropiedades(new ArrayList<Propiedad>(
-				Arrays.asList(new Propiedad("nombre",etiqueta.getNombre()))));
+				Arrays.asList(new Propiedad(NOMBRE,etiqueta.getNombre()))));
 		
 		eLabel = servPersistencia.registrarEntidad(eLabel);
 		
@@ -64,7 +68,7 @@ public class AdaptadorEtiquetaTDS implements IAdaptadorEtiquetaDAO {
 		
 		eLabel = servPersistencia.recuperarEntidad(codigo);
 		
-		nombre = servPersistencia.recuperarPropiedadEntidad(eLabel, "nombre");
+		nombre = servPersistencia.recuperarPropiedadEntidad(eLabel, NOMBRE);
 		
 		Etiqueta etiqueta = new Etiqueta(nombre);
 		etiqueta.setCodigo(codigo);
@@ -75,7 +79,7 @@ public class AdaptadorEtiquetaTDS implements IAdaptadorEtiquetaDAO {
 	@Override
 	public List<Etiqueta> recuperarTodasEtiquetas() {
 		
-		return servPersistencia.recuperarEntidades("etiqueta").stream()
+		return servPersistencia.recuperarEntidades(ETIQUETA).stream()
 				.map(e -> recuperarEtiqueta(e.getId())).collect(Collectors.toList());  // Es posible que explote, pero queda chulo.
 	}	
 }

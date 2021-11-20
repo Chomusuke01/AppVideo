@@ -18,7 +18,12 @@ public class AdaptadorVideoTDS implements IAdaptadorVideoDAO {
 
 	private static ServicioPersistencia servPersistencia;
 	private static AdaptadorVideoTDS unicaInstancia = null;
-	
+	private static final String CODIGO = "codigo";
+	private static final String VIDEO = "video";
+	private static final String URL = "url";
+	private static final String TITULO = "titulo";
+	private static final String ETIQUETAS = "etiquetas";
+	private static final String NUM_REPRODUCCIONES = "num_reproducciones";
 	
 	public static AdaptadorVideoTDS getUnicaInstancia() { // patron singleton
 		if (unicaInstancia == null)
@@ -46,11 +51,11 @@ public class AdaptadorVideoTDS implements IAdaptadorVideoDAO {
 		
 		
 		eVideo = new Entidad();
-		eVideo.setNombre("video");
+		eVideo.setNombre(VIDEO);
 		
 		eVideo.setPropiedades(new ArrayList<Propiedad>(
-				Arrays.asList(new Propiedad ("url",video.getUrl()), new Propiedad ("titulo",video.getTitulo()), 
-						new Propiedad("numReproducciones",String.valueOf(video.getNumReproducciones())), new Propiedad ("etiquetas",obtenerCodigosEtiquetas(video.getEtiquetas())))));
+				Arrays.asList(new Propiedad (URL,video.getUrl()), new Propiedad (TITULO,video.getTitulo()), 
+						new Propiedad(NUM_REPRODUCCIONES,String.valueOf(video.getNumReproducciones())), new Propiedad (ETIQUETAS,obtenerCodigosEtiquetas(video.getEtiquetas())))));
 		
 		eVideo = servPersistencia.registrarEntidad(eVideo);
 		video.setCodigo(eVideo.getId());
@@ -59,22 +64,20 @@ public class AdaptadorVideoTDS implements IAdaptadorVideoDAO {
 	@Override
 	public List<Video> recuperarTodosVideos() {
 		
-		return servPersistencia.recuperarEntidades("video").stream()
+		return servPersistencia.recuperarEntidades(VIDEO).stream()
 				.map(v -> recuperarVideo(v.getId())).collect(Collectors.toList()); // posible explosion
 	}
 
 	@Override
 	public Video recuperarVideo(int codigo) {
-		
 		if (PoolDAO.getUnicaInstancia().contiene(codigo))
 			return (Video) PoolDAO.getUnicaInstancia().getObjeto(codigo);
 		
 		Entidad eVideo = servPersistencia.recuperarEntidad(codigo);
 		
-		
-		String url = servPersistencia.recuperarPropiedadEntidad(eVideo, "url");
-		String titulo = servPersistencia.recuperarPropiedadEntidad(eVideo, "titulo");
-		int numReproducciones = Integer.parseInt(servPersistencia.recuperarPropiedadEntidad(eVideo, "numReproducciones"));
+		String url = servPersistencia.recuperarPropiedadEntidad(eVideo, URL);
+		String titulo = servPersistencia.recuperarPropiedadEntidad(eVideo, TITULO);
+		int numReproducciones = Integer.parseInt(servPersistencia.recuperarPropiedadEntidad(eVideo, NUM_REPRODUCCIONES));
 		
 		Video video = new Video(url, titulo);
 		video.setCodigo(codigo);
@@ -82,7 +85,7 @@ public class AdaptadorVideoTDS implements IAdaptadorVideoDAO {
 		
 		PoolDAO.getUnicaInstancia().addObjeto(codigo, video); // Creo que no hace falta .
 		
-		obtenerEtiquetasDesdeCodigos(servPersistencia.recuperarPropiedadEntidad(eVideo, "etiquetas")).stream().forEach(lb -> video.addEtiqueta(lb)); //Puede explotar
+		obtenerEtiquetasDesdeCodigos(servPersistencia.recuperarPropiedadEntidad(eVideo, ETIQUETAS)).stream().forEach(lb -> video.addEtiqueta(lb)); //Puede explotar
 	
 		return video;
 	}
@@ -93,6 +96,26 @@ public class AdaptadorVideoTDS implements IAdaptadorVideoDAO {
 		return null;
 	}
 
+	@Override
+	public void modificarVideo(Video video) {
+		Entidad eVideo = servPersistencia.recuperarEntidad(video.getCodigo());
+		
+		for (Propiedad prop : eVideo.getPropiedades()) {
+			if (prop.getNombre().equals(CODIGO)) {
+				prop.setValor(String.valueOf(video.getCodigo()));
+			}else if (prop.getNombre().equals(URL)) {
+				prop.setValor(video.getUrl());
+			}else if (prop.getNombre().equals(TITULO)) {
+				prop.setValor(video.getTitulo());
+			}else if (prop.getNombre().equals(NUM_REPRODUCCIONES)) {
+				prop.setValor(String.valueOf(video.getNumReproducciones()));
+			}else if (prop.getNombre().equals(ETIQUETAS)) {
+				prop.setValor(obtenerCodigosEtiquetas(video.getEtiquetas()));
+			}
+			servPersistencia.modificarPropiedad(prop);
+		}
+	}
+	
 	@Override
 	public void removeVideo(Video video) {
 		
@@ -118,13 +141,13 @@ public class AdaptadorVideoTDS implements IAdaptadorVideoDAO {
 
 	private List<Etiqueta> obtenerEtiquetasDesdeCodigos(String lineas) {
 		
-		List<Etiqueta> lineasVenta = new LinkedList<Etiqueta>();
+		List<Etiqueta> etiquetas = new LinkedList<Etiqueta>();
 		StringTokenizer strTok = new StringTokenizer(lineas, " ");
 		AdaptadorEtiquetaTDS adaptadorEtiqueta = AdaptadorEtiquetaTDS.getUnicaInstancia();
 		while (strTok.hasMoreTokens()) {
-			lineasVenta.add(adaptadorEtiqueta.recuperarEtiqueta(Integer.valueOf((String) strTok.nextElement())));
+			etiquetas.add(adaptadorEtiqueta.recuperarEtiqueta(Integer.valueOf((String) strTok.nextElement())));
 		}
-		return lineasVenta;
+		return etiquetas;
 	}
 
 }

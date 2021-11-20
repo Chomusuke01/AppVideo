@@ -22,7 +22,7 @@ public class AppView {
 
 
 	private JFrame frmApp;
-	private static JPanel panelPrincipal;
+	private JPanel panelPrincipal;
 	private JButton btnExplorar;
 	private JButton btnMisListas;
 	private JButton btnRecientes;
@@ -32,8 +32,7 @@ public class AppView {
 	private JPanel panelExplorar;
 	private JPanel panelNuevaLista;
 	private JPanel panelMisListas;
-	private static JPanel panelReproductor;
-	
+
 	public AppView() {
 		initialize();
 	}
@@ -58,8 +57,6 @@ public class AppView {
 		panelPrincipal.add(panelNuevaLista,"panelNuevaLista");
 		panelMisListas = new PanelMisListas();
 		panelPrincipal.add(panelMisListas,"panelMisListas");
-		panelReproductor = new PanelReproductor();
-		panelPrincipal.add(panelReproductor,"panelReproductor");
 	}
 	
 	private JPanel addPanelPrincipal() {
@@ -94,6 +91,7 @@ public class AppView {
 		
 		btnNuevaLista = new JButton("Nueva Lista");
 		panelBtn.add(btnNuevaLista);
+		crearManejadorBotonNuevaLista(btnNuevaLista);
 		
 		JPanel panelNorteSuperior = new JPanel();
 		panelNorteSuperior.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
@@ -159,13 +157,6 @@ public class AppView {
 		});
 	}
 	
-	public static void reproducirVideo(String url) {
-		AppMain.videoWeb.cancel();
-		CardLayout cl = (CardLayout) (panelPrincipal.getLayout());
-		cl.show(panelPrincipal, "panelReproductor");
-		((PanelReproductor) panelReproductor).reproducir(url);
-	}
-	
 	private void crearManajadorBotonMisListas (JButton boton) {
 		boton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -180,9 +171,23 @@ public class AppView {
 		boton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				AppMain.videoWeb.cancel();
+				((PanelExplorar) panelExplorar).cambiarExplorar();
 				CardLayout cl = (CardLayout) (panelPrincipal.getLayout());
 				cl.show(panelPrincipal, "panelExplorar");
 			}
+		});
+	}
+	
+	private void crearManejadorBotonNuevaLista(JButton boton) {
+		boton.addActionListener(new ActionListener () {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				AppMain.videoWeb.cancel();
+				CardLayout cl = (CardLayout) (panelPrincipal.getLayout());
+				cl.show(panelPrincipal, "panelNuevaLista");
+			}
+			
 		});
 	}
 }

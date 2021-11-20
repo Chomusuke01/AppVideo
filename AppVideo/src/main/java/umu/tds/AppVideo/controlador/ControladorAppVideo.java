@@ -6,17 +6,22 @@ import java.util.List;
 
 import umu.tds.AppVideo.modelo.CatalogoUsuarios;
 import umu.tds.AppVideo.modelo.CatalogoVideos;
+import umu.tds.AppVideo.modelo.ListaReproduccion;
 import umu.tds.AppVideo.modelo.Usuario;
 import umu.tds.AppVideo.modelo.Video;
 import umu.tds.AppVideo.persistencia.DAOException;
 import umu.tds.AppVideo.persistencia.FactoriaDAO;
+import umu.tds.AppVideo.persistencia.IAdaptadorListaReproduccionDAO;
 import umu.tds.AppVideo.persistencia.IAdaptadorUsuarioDAO;
+import umu.tds.AppVideo.persistencia.IAdaptadorVideoDAO;
 
 public class ControladorAppVideo {
 	
 	private static ControladorAppVideo unicaInstancia;
 
 	private IAdaptadorUsuarioDAO adaptadorUsuario;
+	private IAdaptadorVideoDAO adaptadorVideo;
+	private IAdaptadorListaReproduccionDAO adaptadorListaReproduccion;
 
 	private CatalogoUsuarios catalogoUsuarios;
 	private CatalogoVideos catalogoVideos;
@@ -41,6 +46,8 @@ public class ControladorAppVideo {
 			e.printStackTrace();
 		}
 		adaptadorUsuario = factoria.getUsuarioDAO();
+		adaptadorVideo = factoria.getVideoDAO();
+		adaptadorListaReproduccion = factoria.getListaReproduccionDAO();
 	}
 	
 	private void inicializarCatalogos() {
@@ -83,5 +90,22 @@ public class ControladorAppVideo {
 	
 	public List<Video> buscarVideos(String tituloVideo){
 		return catalogoVideos.realizarBusqueda(tituloVideo);
+	}
+	
+	public void nuevaReproduccion(Video video) {
+		video.aumentarNumReproducciones();
+		adaptadorVideo.modificarVideo(video);
+	}
+	
+	public List<Video> getListaReproduccion(String nombre){
+		return catalogoUsuarios.getListaReproduccion(usuarioActual.getUsuario(), nombre);
+	}
+	
+	public void añadirNuevaLista(String lista) {
+		
+		ListaReproduccion listaRep = new ListaReproduccion(lista);
+		usuarioActual.addListaRep(listaRep);
+		adaptadorListaReproduccion.registrarListaRep(listaRep); /// Preguntar
+		adaptadorUsuario.modificarUsuario(usuarioActual);
 	}
 }

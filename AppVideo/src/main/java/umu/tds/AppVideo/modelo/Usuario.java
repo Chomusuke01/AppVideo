@@ -3,6 +3,7 @@ package umu.tds.AppVideo.modelo;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Usuario {
 	
@@ -118,6 +119,21 @@ public class Usuario {
 
 	public List<ListaReproduccion> getListasVideos() {
 		return new LinkedList<ListaReproduccion>(listasVideos);
+	}
+	
+	public List<Video> getVideosFromLista(String lista){
+		
+	
+		if (listasVideos.stream()
+						.filter(l -> l.getNombre().equals(lista)).count() == 0) {
+			return null;
+		}
+		
+		return   listasVideos.stream()
+				.filter(l -> l.getNombre().equals(lista))
+				.flatMap(l -> l.getVideos().stream())
+				.collect(Collectors.toList());
+				
 	}
 	
 	public void addListaRep (ListaReproduccion lista) {

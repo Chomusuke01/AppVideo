@@ -20,9 +20,20 @@ import umu.tds.AppVideo.modelo.Video;
 
 public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO{
 	
+	private static final String CODIGO = "codigo";
+	private static final String USUARIO = "usuario";
+	private static final String NOMBRE = "nombre";
+	private static final String APELLIDOS = "apellidos";
+	private static final String FECHA_NACIMIENTO = "fecha_nacimiento";
+	private static final String NICK = "nick";
+	private static final String CONTRASEÑA = "contraseña";
+	private static final String EMAIL = "email";
+	private static final String PREMIUM = "premium";
+	private static final String LISTAS_REPRODUCCION = "listas_reproduccion";
+	private static final String RECIENTES = "recientes";
+	
 	private static ServicioPersistencia servPersistencia;
 	private static AdaptadorUsuarioTDS unicaInstancia = null;
-	
 	private SimpleDateFormat dateFormat;
 	
 	public static AdaptadorUsuarioTDS getUnicaInstancia() { // patron singleton
@@ -54,18 +65,19 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO{
 		AdaptadorListaReproduccionTDS adaptadorListaRep = AdaptadorListaReproduccionTDS.getUnicaInstancia();
 		
 		u.getRecientes().stream().forEach(video -> adaptadorVideo.addVideo(video));
+		
 		u.getListasVideos().stream().forEach(listaRep -> adaptadorListaRep.registrarListaRep(listaRep));
 		
 		
 		eUsuario = new Entidad();
-		eUsuario.setNombre("usuario");
+		eUsuario.setNombre(USUARIO);
 		
 		eUsuario.setPropiedades(new ArrayList<Propiedad>(
-				Arrays.asList(new Propiedad("nombre", u.getNombre()), new Propiedad("apellidos", u.getApellidos()), 
-						new Propiedad ("fecha_nacimiento",dateFormat.format(u.getFechaNacimiento())), new Propiedad ("usuario",u.getUsuario()), new Propiedad("contraseña",u.getContraseña()), 
-						new Propiedad("email",u.getEmail()), new Propiedad("premium",String.valueOf(u.isPremium())), 
-						new Propiedad ("listasReproduccion", obtenerCodigosListaRep(u.getListasVideos())), 
-						new Propiedad("recientes", obtenerCodigosVideosRecientes(u.getRecientes())))));
+				Arrays.asList(new Propiedad(NOMBRE, u.getNombre()), new Propiedad(APELLIDOS, u.getApellidos()), 
+						new Propiedad (FECHA_NACIMIENTO,dateFormat.format(u.getFechaNacimiento())), new Propiedad (NICK,u.getUsuario()), new Propiedad(CONTRASEÑA,u.getContraseña()), 
+						new Propiedad(EMAIL,u.getEmail()), new Propiedad(PREMIUM,String.valueOf(u.isPremium())), 
+						new Propiedad (LISTAS_REPRODUCCION, obtenerCodigosListaRep(u.getListasVideos())), 
+						new Propiedad(RECIENTES, obtenerCodigosVideosRecientes(u.getRecientes())))));
 
 		eUsuario = servPersistencia.registrarEntidad(eUsuario);
 		// asignar identificador unico
@@ -77,7 +89,7 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO{
 	@Override
 	public List<Usuario> recuperarTodosUsuarios() {
 		
-		return servPersistencia.recuperarEntidades("usuario").stream()
+		return servPersistencia.recuperarEntidades(USUARIO).stream()
 				.map(u -> recuperarUsuario(u.getId())).collect(Collectors.toList());
 	}
 
@@ -89,16 +101,16 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO{
 		
 		Entidad eUsuario = servPersistencia.recuperarEntidad(codigo);
 		
-		String usuario = servPersistencia.recuperarPropiedadEntidad(eUsuario, "usuario");
-		String nombre = servPersistencia.recuperarPropiedadEntidad(eUsuario, "nombre");
-		String contraseña = servPersistencia.recuperarPropiedadEntidad(eUsuario, "contraseña");
-		String apellidos = servPersistencia.recuperarPropiedadEntidad(eUsuario, "apellidos");
-		String email = servPersistencia.recuperarPropiedadEntidad(eUsuario, "email");
-		boolean premium = Boolean.valueOf(servPersistencia.recuperarPropiedadEntidad(eUsuario, "premium"));
+		String usuario = servPersistencia.recuperarPropiedadEntidad(eUsuario, NICK);
+		String nombre = servPersistencia.recuperarPropiedadEntidad(eUsuario, NOMBRE);
+		String contraseña = servPersistencia.recuperarPropiedadEntidad(eUsuario, CONTRASEÑA);
+		String apellidos = servPersistencia.recuperarPropiedadEntidad(eUsuario, APELLIDOS);
+		String email = servPersistencia.recuperarPropiedadEntidad(eUsuario, EMAIL);
+		boolean premium = Boolean.valueOf(servPersistencia.recuperarPropiedadEntidad(eUsuario, PREMIUM));
 		Date fecha_nacimiento = null;
 		
 		try {
-			fecha_nacimiento = dateFormat.parse(servPersistencia.recuperarPropiedadEntidad(eUsuario, "fecha_nacimiento"));
+			fecha_nacimiento = dateFormat.parse(servPersistencia.recuperarPropiedadEntidad(eUsuario, FECHA_NACIMIENTO));
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
@@ -110,8 +122,8 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO{
 		
 		PoolDAO.getUnicaInstancia().addObjeto(codigo, u);
 		
-		obtenerListasRepDesdeCodigo(servPersistencia.recuperarPropiedadEntidad(eUsuario, "listasReproduccion")).stream().forEach(lista -> u.addListaRep(lista));
-		obtenerRecientesDesdeCodigo(servPersistencia.recuperarPropiedadEntidad(eUsuario, "recientes")).stream().forEach(v -> u.addReciente(v));
+		obtenerListasRepDesdeCodigo(servPersistencia.recuperarPropiedadEntidad(eUsuario, LISTAS_REPRODUCCION)).stream().forEach(lista -> u.addListaRep(lista));
+		obtenerRecientesDesdeCodigo(servPersistencia.recuperarPropiedadEntidad(eUsuario, RECIENTES)).stream().forEach(v -> u.addReciente(v));
 		
 		return u;
 	}
@@ -140,25 +152,25 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO{
 		Entidad eUsuario = servPersistencia.recuperarEntidad(u.getCodigo());
 
 		for (Propiedad prop : eUsuario.getPropiedades()) {
-			if (prop.getNombre().equals("codigo")) {
+			if (prop.getNombre().equals(CODIGO)) {
 				prop.setValor(String.valueOf(u.getCodigo()));
-			} else if (prop.getNombre().equals("usuario")) {
+			} else if (prop.getNombre().equals(NICK)) {
 				prop.setValor(u.getUsuario());
-			} else if (prop.getNombre().equals("nombre")) {
+			} else if (prop.getNombre().equals(NOMBRE)) {
 				prop.setValor(u.getNombre());
-			} else if (prop.getNombre().equals("apellidos")) {
+			} else if (prop.getNombre().equals(APELLIDOS)) {
 				prop.setValor(u.getApellidos());
-			} else if (prop.getNombre().equals("email")) {
+			} else if (prop.getNombre().equals(EMAIL)) {
 				prop.setValor(u.getEmail());
-			} else if (prop.getNombre().equals("contraseña")) {
+			} else if (prop.getNombre().equals(CONTRASEÑA)) {
 				prop.setValor(u.getContraseña());
-			} else if (prop.getNombre().equals("fecha_nacimiento")) {
+			} else if (prop.getNombre().equals(FECHA_NACIMIENTO)) {
 				prop.setValor(dateFormat.format(u.getFechaNacimiento()));
-			} else if (prop.getNombre().equals("listasReproduccion")) {
+			} else if (prop.getNombre().equals(LISTAS_REPRODUCCION)) {
 				prop.setValor(obtenerCodigosListaRep(u.getListasVideos()));
-			} else if (prop.getNombre().equals("recientes")) {
+			} else if (prop.getNombre().equals(RECIENTES)) {
 				prop.setValor(obtenerCodigosVideosRecientes(u.getRecientes()));
-			} else if (prop.getNombre().equals("premium")) {
+			} else if (prop.getNombre().equals(PREMIUM)) {
 				prop.setValor(String.valueOf(u.isPremium()));
 			}
 			servPersistencia.modificarPropiedad(prop);
@@ -169,24 +181,24 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO{
 
 	private String obtenerCodigosListaRep(List<ListaReproduccion> listaRep) {
 		
-		String lineas = "";
+		String aux = "";
 		
 		for(ListaReproduccion list : listaRep) {
-			lineas += list.getCodigo() + " ";
+			aux += list.getCodigo() + " ";
 		}
 		
-		return lineas.trim();
+		return aux.trim();
 	}
 	
 	private String obtenerCodigosVideosRecientes (List <Video> videos) {
 		
-		String lineas = "";
+		String aux = "";
 		
 		for (Video v : videos) {
-			lineas += v.getCodigo() + " ";
+			aux += v.getCodigo() + " ";
 		}
 		
-		return lineas.trim();
+		return aux.trim();
 	}
 	
 	private List<Video> obtenerRecientesDesdeCodigo(String videos) {
