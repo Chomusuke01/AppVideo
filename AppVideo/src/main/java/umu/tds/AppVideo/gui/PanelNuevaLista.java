@@ -10,8 +10,9 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
@@ -49,9 +50,9 @@ public class PanelNuevaLista extends JPanel {
 	private JPanel panelPrincipal;
 	private List<Video> listaActual;
 	private List<Video> busquedaActual;
-	private JList<MiniaturaVideo> listaRep;
+	private ListaVideos listaRep;
 	private TablaBusqueda resultadoBusqueda;
-	private DefaultListModel<MiniaturaVideo> model;
+	private String nombreListaActual;
 
 	/**
 	 * Create the panel.
@@ -192,7 +193,7 @@ public class PanelNuevaLista extends JPanel {
 		panelPrincipal = new JPanel();
 		panelCentro.add(panelPrincipal, BorderLayout.CENTER);
 		
-		listaRep = new JList<MiniaturaVideo>();
+		listaRep = new ListaVideos(new DefaultListModel<MiniaturaVideo>(),120,150);
 		JScrollPane scrollLista=new JScrollPane(listaRep);
 		
 		scrollLista.setMinimumSize(new Dimension(220,400));
@@ -245,6 +246,7 @@ public class PanelNuevaLista extends JPanel {
 					JOptionPane.showMessageDialog(panelPrincipal, "Introduzca un nombre de lista",
 							"Error lista", JOptionPane.ERROR_MESSAGE);
 				}else {
+					nombreListaActual = txtLista.getText();
 					listaActual = ControladorAppVideo.getUnicaInstancia().getListaReproduccion(txtLista.getText());
 					if (listaActual == null) {
 						int res = JOptionPane.showConfirmDialog(panelPrincipal, "¿Desea crear la lista" + "\"" + txtLista.getText() + "\"?","Lista no encontrada", JOptionPane.YES_NO_OPTION);
@@ -253,13 +255,8 @@ public class PanelNuevaLista extends JPanel {
 							ControladorAppVideo.getUnicaInstancia().añadirNuevaLista(txtLista.getText());
 						}
 					}else {
-						model = new DefaultListModel<MiniaturaVideo>();
-						listaActual.stream().forEach(v -> model.addElement(new MiniaturaVideo(v.getTitulo(),v.getUrl(),0,150,120)));
-//						model.addElement(new MiniaturaVideo("El conejo1","https://www.youtube.com/watch?v=twayP7FqZmc",0,150,120));
-						listaRep.setModel(model);
-						listaRep.setCellRenderer(new MiniaturaVideoListRenderer());
-						listaRep.setFixedCellHeight(120);
-						listaRep.setFixedCellWidth(150);
+						listaRep.reiniciar();
+						listaRep.añadirElementos(listaActual.stream().map(v -> new MiniaturaVideo(v.getTitulo(),v.getUrl(),0,150,120)).collect(Collectors.toList()));
 					}
 				}	
 			}
@@ -273,7 +270,7 @@ public class PanelNuevaLista extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				int videoSeleccionado = resultadoBusqueda.getSelectedRow()*NUM_COLUMNAS_RESULTADO + resultadoBusqueda.getSelectedColumn();
 				
-				if (model == null) {
+				if (nombreListaActual == null) {
 					JOptionPane.showMessageDialog(panelPrincipal, "Seleccione una lista donde añadir",
 							"Error Añadir", JOptionPane.ERROR_MESSAGE);
 				}else if (busquedaActual == null || videoSeleccionado < 0) {
@@ -282,11 +279,7 @@ public class PanelNuevaLista extends JPanel {
 				}else {
 					Video nuevo = busquedaActual.get(videoSeleccionado);
 					if (ControladorAppVideo.getUnicaInstancia().añadirVideoLista(txtLista.getText(), nuevo)) {
-						model.addElement(new MiniaturaVideo(nuevo.getTitulo(), nuevo.getUrl(), 0, 150, 120));
-						listaRep.setModel(model);
-						listaRep.setCellRenderer(new MiniaturaVideoListRenderer());
-						listaRep.setFixedCellHeight(120);
-						listaRep.setFixedCellWidth(150);
+						listaRep.añadirElemento(new MiniaturaVideo(nuevo.getTitulo(), nuevo.getUrl(), 0, 150, 120));
 					}else {
 						JOptionPane.showMessageDialog(panelPrincipal, "El video ya está en la lista",
 								"Error Añadir", JOptionPane.ERROR_MESSAGE);
@@ -308,11 +301,15 @@ public class PanelNuevaLista extends JPanel {
 					JOptionPane.showMessageDialog(panelPrincipal, "Elige el video de la lista que quieres eliminar",
 							"Error eliminar", JOptionPane.ERROR_MESSAGE);
 				}else {
-					MiniaturaVideo v = model.remove(videoEliminar); 
+					MiniaturaVideo v = listaRep.eliminarElemento(videoEliminar); 
 					ControladorAppVideo.getUnicaInstancia().eliminarVideoLista(txtLista.getText(), v.getTitulo(), v.getUrl());
 				}
 			}
 		});
+	}
+	
+	private void crearManejadorBtnNuevaBusuqeda() {
+		
 	}
 	
 	private class MyTableModel extends DefaultTableModel {
