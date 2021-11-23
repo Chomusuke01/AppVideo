@@ -10,5 +10,5 @@ public interface IAdaptadorListaReproduccionDAO {
 	public void borrarListaReproduccion(ListaReproduccion listaRep);
 	public ListaReproduccion recuperarListaReproduccion (int codigo);
 	public List<ListaReproduccion> recuperarTodasListas();
-	
+	public void ModificarListaReproduccion(ListaReproduccion lista);
 }

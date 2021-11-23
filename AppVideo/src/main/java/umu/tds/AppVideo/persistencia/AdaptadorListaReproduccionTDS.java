@@ -18,6 +18,7 @@ public class AdaptadorListaReproduccionTDS implements IAdaptadorListaReproduccio
 	
 	private static ServicioPersistencia servPersistencia;
 	private static AdaptadorListaReproduccionTDS unicaInstancia = null;
+	private static final String CODIGO = "codigo";
 	private static final String LISTA_REPRODUCCION = "lista_reproduccion";
 	private static final String NOMBRE = "nombre";
 	private static final String VIDEOS = "videos";
@@ -96,6 +97,22 @@ public class AdaptadorListaReproduccionTDS implements IAdaptadorListaReproduccio
 		return servPersistencia.recuperarEntidades(LISTA_REPRODUCCION).stream()
 				.map(listaRep -> recuperarListaReproduccion(listaRep.getId())).collect(Collectors.toList());
 	}
+	
+	@Override
+	public void ModificarListaReproduccion(ListaReproduccion lista) {
+		Entidad eListaRep = servPersistencia.recuperarEntidad(lista.getCodigo());
+		
+		for (Propiedad prop : eListaRep.getPropiedades()) {
+			if (prop.getNombre().equals(CODIGO)) {
+				prop.setValor(String.valueOf(lista.getCodigo()));
+			}else if (prop.getNombre().equals(NOMBRE)) {
+				prop.setValor(lista.getNombre());
+			}else if (prop.getNombre().equals(VIDEOS)) {
+				prop.setValor(obtenerCodigosVideos(lista.getVideos()));
+			}
+			servPersistencia.modificarPropiedad(prop);
+		}
+	}
 
 	//------------------Funciones auxiliares----------------//
 	
@@ -123,4 +140,6 @@ public class AdaptadorListaReproduccionTDS implements IAdaptadorListaReproduccio
 		
 		return listaVideos;
 	}
+
+
 }

@@ -1,16 +1,17 @@
 package umu.tds.AppVideo.modelo;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
 public class ListaReproduccion {
 	private String nombre;
 	private int codigo;
-	private LinkedList<Video> videos;
+	private HashSet<Video> videos;
 	
 	public ListaReproduccion(String nombre) {
 		this.nombre = nombre;
-		videos = new LinkedList<Video>();
+		videos = new HashSet<Video>();
 		codigo = 0;
 	}
 
@@ -34,9 +35,11 @@ public class ListaReproduccion {
 		return new LinkedList<Video>(videos);
 	}
 	
-	public void añadirVideo(Video video) {
-		videos.add(video);
+	public boolean añadirVideo(Video video) {
+		return videos.add(video);
 	}
 	
-	
+	public void eliminarVideo(Video video) {
+		videos.remove(video);
+	}
 }

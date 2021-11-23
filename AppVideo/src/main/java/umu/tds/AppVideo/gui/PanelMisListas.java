@@ -3,22 +3,17 @@ package umu.tds.AppVideo.gui;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import javax.swing.JLabel;
 import javax.swing.JComboBox;
 import java.awt.Insets;
-import javax.swing.JTextField;
-import javax.swing.BoxLayout;
-import java.awt.GridLayout;
 import javax.swing.JButton;
 
 public class PanelMisListas extends JPanel {
 
-	/**
-	 * Create the panel.
-	 */
+	private static final long serialVersionUID = 1L;
+
 	public PanelMisListas() {
 		setPreferredSize(new Dimension(970, 620));
 		setMinimumSize(new Dimension(970, 620));

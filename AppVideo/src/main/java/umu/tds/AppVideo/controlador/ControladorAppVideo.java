@@ -109,4 +109,21 @@ public class ControladorAppVideo {
 		adaptadorUsuario.modificarUsuario(usuarioActual);
 		
 	}
+	
+	public boolean añadirVideoLista(String lista, Video v) {
+		
+		ListaReproduccion listaModificada = usuarioActual.añadirNuevoVideo(lista, v);
+		if (listaModificada == null)
+		{
+			return false;
+		}
+		adaptadorListaReproduccion.ModificarListaReproduccion(listaModificada);
+		return true;
+	}
+	
+	public void eliminarVideoLista(String lista, String titulo, String url) {
+		
+		ListaReproduccion listaModificada = usuarioActual.eliminarVideoLista(lista, new Video(url,titulo));
+		adaptadorListaReproduccion.ModificarListaReproduccion(listaModificada);
+	}
 }

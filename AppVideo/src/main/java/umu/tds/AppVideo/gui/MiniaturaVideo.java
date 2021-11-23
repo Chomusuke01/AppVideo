@@ -17,6 +17,8 @@ public class MiniaturaVideo extends JPanel{
 	private int id;
 	private JPanel panelMiniatura;
 	private JPanel panelTitulo;
+	private String titulo;
+	private String url;
 	private static final long serialVersionUID = 1L;
 
 	public int getId() {
@@ -44,6 +46,8 @@ public class MiniaturaVideo extends JPanel{
 	public MiniaturaVideo(String titulo, String url, int id,int width, int height) {
 		
 		this.id = id;
+		this.titulo = titulo;
+		this.url = url;
 		this.setMaximumSize(new Dimension (width,height));
 		this.setMinimumSize(new Dimension (width,height));
 		this.setPreferredSize(new Dimension (width,height));
@@ -64,4 +68,13 @@ public class MiniaturaVideo extends JPanel{
 		panelTitulo.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		panelTitulo.add(lblTitulo);
 	}
+
+	public String getTitulo() {
+		return titulo;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+	
 }

@@ -10,7 +10,6 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
-
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -52,6 +51,7 @@ public class PanelNuevaLista extends JPanel {
 	private List<Video> busquedaActual;
 	private JList<MiniaturaVideo> listaRep;
 	private TablaBusqueda resultadoBusqueda;
+	private DefaultListModel<MiniaturaVideo> model;
 
 	/**
 	 * Create the panel.
@@ -124,6 +124,7 @@ public class PanelNuevaLista extends JPanel {
 		gbc_btnNewButton_2.gridx = 0;
 		gbc_btnNewButton_2.gridy = 0;
 		panelBotones.add(btnAñadir, gbc_btnNewButton_2);
+		crearManejadorBtnAñadir(btnAñadir);
 		
 		btnQuitar = new JButton("Quitar");
 		GridBagConstraints gbc_btnNewButton_3 = new GridBagConstraints();
@@ -131,6 +132,7 @@ public class PanelNuevaLista extends JPanel {
 		gbc_btnNewButton_3.gridx = 2;
 		gbc_btnNewButton_3.gridy = 0;
 		panelBotones.add(btnQuitar, gbc_btnNewButton_3);
+		crearManejadorBtnQuitar(btnQuitar);
 		
 		btnAceptar = new JButton("Aceptar");
 		GridBagConstraints gbc_btnNewButton_4 = new GridBagConstraints();
@@ -251,8 +253,7 @@ public class PanelNuevaLista extends JPanel {
 							ControladorAppVideo.getUnicaInstancia().añadirNuevaLista(txtLista.getText());
 						}
 					}else {
-						//Mostrar lista
-						DefaultListModel<MiniaturaVideo> model=new DefaultListModel<MiniaturaVideo>();
+						model = new DefaultListModel<MiniaturaVideo>();
 						listaActual.stream().forEach(v -> model.addElement(new MiniaturaVideo(v.getTitulo(),v.getUrl(),0,150,120)));
 //						model.addElement(new MiniaturaVideo("El conejo1","https://www.youtube.com/watch?v=twayP7FqZmc",0,150,120));
 						listaRep.setModel(model);
@@ -261,6 +262,55 @@ public class PanelNuevaLista extends JPanel {
 						listaRep.setFixedCellWidth(150);
 					}
 				}	
+			}
+		});
+	}
+	
+	private void crearManejadorBtnAñadir(JButton boton) {
+		boton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int videoSeleccionado = resultadoBusqueda.getSelectedRow()*NUM_COLUMNAS_RESULTADO + resultadoBusqueda.getSelectedColumn();
+				
+				if (model == null) {
+					JOptionPane.showMessageDialog(panelPrincipal, "Seleccione una lista donde añadir",
+							"Error Añadir", JOptionPane.ERROR_MESSAGE);
+				}else if (busquedaActual == null || videoSeleccionado < 0) {
+					JOptionPane.showMessageDialog(panelPrincipal, "Seleccione un video antes de añadir",
+							"Error Añadir", JOptionPane.ERROR_MESSAGE);
+				}else {
+					Video nuevo = busquedaActual.get(videoSeleccionado);
+					if (ControladorAppVideo.getUnicaInstancia().añadirVideoLista(txtLista.getText(), nuevo)) {
+						model.addElement(new MiniaturaVideo(nuevo.getTitulo(), nuevo.getUrl(), 0, 150, 120));
+						listaRep.setModel(model);
+						listaRep.setCellRenderer(new MiniaturaVideoListRenderer());
+						listaRep.setFixedCellHeight(120);
+						listaRep.setFixedCellWidth(150);
+					}else {
+						JOptionPane.showMessageDialog(panelPrincipal, "El video ya está en la lista",
+								"Error Añadir", JOptionPane.ERROR_MESSAGE);
+					}
+				}
+			}
+		});
+	}
+	
+	
+	private void crearManejadorBtnQuitar(JButton boton) {
+		boton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				int videoEliminar = listaRep.getSelectedIndex();
+				if (videoEliminar == -1) {
+					JOptionPane.showMessageDialog(panelPrincipal, "Elige el video de la lista que quieres eliminar",
+							"Error eliminar", JOptionPane.ERROR_MESSAGE);
+				}else {
+					MiniaturaVideo v = model.remove(videoEliminar); 
+					ControladorAppVideo.getUnicaInstancia().eliminarVideoLista(txtLista.getText(), v.getTitulo(), v.getUrl());
+				}
 			}
 		});
 	}

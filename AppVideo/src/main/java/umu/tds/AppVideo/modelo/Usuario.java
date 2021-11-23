@@ -147,4 +147,26 @@ public class Usuario {
 		}
 		recientes.addFirst(reciente);
 	}
+	
+	public ListaReproduccion añadirNuevoVideo(String lista, Video v) {
+		
+		ListaReproduccion listaRep = listasVideos.stream()
+												 .filter(l -> l.getNombre().equals(lista))
+												 .findFirst().orElse(null); // Nunca va a devolver null por que estamos seguros de que la lista en este punto existe.
+		if (listaRep.añadirVideo(v)) { // No queremos videos repetidos en una lista.
+			return listaRep;
+		}
+		return null;
+	}
+	
+	public ListaReproduccion eliminarVideoLista(String lista, Video v) {
+		
+		ListaReproduccion listaRep = listasVideos.stream()
+				 .filter(l -> l.getNombre().equals(lista))
+				 .findFirst().orElse(null);
+		
+		listaRep.eliminarVideo(v);
+		
+		return listaRep;
+	}
 }
