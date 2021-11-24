@@ -5,15 +5,21 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 
+import umu.tds.AppVideo.controlador.ControladorAppVideo;
+import umu.tds.AppVideo.modelo.Video;
+
 import java.awt.Dimension;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class PanelMasVistos extends JPanel {
 	
 	private static final int NUM_COLUMNAS_RESULTADO = 4;
 	private JPanel panel_oeste;
 	private JPanel panel_centro;
+	private List<Video> listaMasVistos;
 	private ListaVideos listaRep;
 	private TablaBusqueda resultadoBusqueda;
 
@@ -49,7 +55,10 @@ public class PanelMasVistos extends JPanel {
 		scrollBusqueda.setPreferredSize(new Dimension(745,615));
 		scrollBusqueda.setMaximumSize(new Dimension(745,615));
 		panel_centro.add(scrollBusqueda);
-
+		
+		listaMasVistos = ControladorAppVideo.getUnicaInstancia().getListaMasVistos();
+		listaRep.reiniciar();
+		listaRep.añadirElementos(listaMasVistos.stream().map(v -> new MiniaturaVideo(v.getTitulo(),v.getUrl(),0,150,120)).collect(Collectors.toList()));
 	}
 
 }
