@@ -105,6 +105,10 @@ public class ControladorAppVideo {
 		return catalogoVideos.getMasVistos();
 	}
 	
+	public List<Video> getListaRecientes(){
+		return usuarioActual.getRecientes();
+	}
+	
 	public void añadirNuevaLista(String lista) {
 		
 		ListaReproduccion listaRep = new ListaReproduccion(lista);
