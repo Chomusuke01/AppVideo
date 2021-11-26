@@ -42,4 +42,9 @@ public class ListaReproduccion {
 	public void eliminarVideo(Video video) {
 		videos.remove(video);
 	}
+	
+	@Override
+	public String toString() {
+		return nombre;
+	}
 }

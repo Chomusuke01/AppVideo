@@ -134,4 +134,8 @@ public class ControladorAppVideo {
 		ListaReproduccion listaModificada = usuarioActual.eliminarVideoLista(lista, new Video(url,titulo));
 		adaptadorListaReproduccion.ModificarListaReproduccion(listaModificada);
 	}
+	
+	public List<ListaReproduccion> getListasReproduccion(){
+		return usuarioActual.getListasVideos();
+	}
 }

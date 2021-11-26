@@ -57,31 +57,33 @@ public class CatalogoVideos {
 	}
 	
 	public List<Video> getMasVistos(){
-		int i = 0;
-		List<Video> masvistos = new LinkedList<Video>();
-		
-		List<Entry<String, Video>> list = new LinkedList<>(videos.entrySet());
-	    Collections.sort(list, new Comparator<Object>() {
-	       @SuppressWarnings("unchecked")
-		public int compare(Object o1, Object o2) {
-	            return ((Comparable<Integer>) ((Map.Entry<String, Video>) (o1)).getValue().getNumReproducciones()).compareTo(((Map.Entry<String, Video>) (o2)).getValue().getNumReproducciones());
-	        }
-	    });
-	    Map<String, Video> result = new LinkedHashMap<>();
-	    for (Iterator<Entry<String, Video>> it = list.iterator(); it.hasNext();) {
-	        Map.Entry<String, Video> entry = (Map.Entry<String, Video>) it.next();
-	        result.put(entry.getKey(), entry.getValue());
-	    }
+//		int i = 0;
+//		List<Video> masvistos = new LinkedList<Video>();
+//		
+//		List<Entry<String, Video>> list = new LinkedList<>(videos.entrySet());
+//	    Collections.sort(list, new Comparator<Object>() {
+//	       @SuppressWarnings("unchecked")
+//		public int compare(Object o1, Object o2) {
+//	            return ((Comparable<Integer>) ((Map.Entry<String, Video>) (o1)).getValue().getNumReproducciones()).compareTo(((Map.Entry<String, Video>) (o2)).getValue().getNumReproducciones());
+//	        }
+//	    });
+//	    Map<String, Video> result = new LinkedHashMap<>();
+//	    for (Iterator<Entry<String, Video>> it = list.iterator(); it.hasNext();) {
+//	        Map.Entry<String, Video> entry = (Map.Entry<String, Video>) it.next();
+//	        result.put(entry.getKey(), entry.getValue());
+//	    }
+//	    
+//	    for (Entry<String, Video> entry : result.entrySet()) {
+//	    	if(i >= 10) {
+//	    		break;
+//	    	}
+//			masvistos.add(entry.getValue());
+//			i++;
+//		}
 	    
-	    for (Entry<String, Video> entry : result.entrySet()) {
-	    	if(i >= 10) {
-	    		break;
-	    	}
-			masvistos.add(entry.getValue());
-			i++;
-		}
-	    
-	    return masvistos;
+	    return videos.values().stream()
+	    		.sorted((v1,v2) -> Integer.compare(v1.getNumReproducciones(), v2.getNumReproducciones()))
+	    		.collect(Collectors.toList());
 	}
 	
 }

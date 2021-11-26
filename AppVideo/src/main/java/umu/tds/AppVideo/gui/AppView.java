@@ -163,6 +163,7 @@ public class AppView {
 				AppMain.videoWeb.cancel();
 				CardLayout cl = (CardLayout) (panelPrincipal.getLayout());
 				cl.show(panelPrincipal, "panelMisListas");
+				((PanelMisListas) panelMisListas).actualizar();
 			}
 		});
 	}
@@ -187,7 +188,6 @@ public class AppView {
 				CardLayout cl = (CardLayout) (panelPrincipal.getLayout());
 				cl.show(panelPrincipal, "panelNuevaLista");
 			}
-			
 		});
 	}
 }
