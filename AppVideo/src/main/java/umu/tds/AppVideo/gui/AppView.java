@@ -32,6 +32,7 @@ public class AppView {
 	private JPanel panelExplorar;
 	private JPanel panelNuevaLista;
 	private JPanel panelMisListas;
+	private JPanel panelRecientes;
 
 	public AppView() {
 		initialize();
@@ -57,6 +58,8 @@ public class AppView {
 		panelPrincipal.add(panelNuevaLista,"panelNuevaLista");
 		panelMisListas = new PanelMisListas();
 		panelPrincipal.add(panelMisListas,"panelMisListas");
+		panelRecientes = new PanelRecientes();
+		panelPrincipal.add(panelRecientes,"panelRecientes");
 	}
 	
 	private JPanel addPanelPrincipal() {
@@ -88,6 +91,7 @@ public class AppView {
 		
 		btnRecientes = new JButton("Recientes");
 		panelBtn.add(btnRecientes);
+		crearManejadorBotonRecientes(btnRecientes);
 		
 		btnNuevaLista = new JButton("Nueva Lista");
 		panelBtn.add(btnNuevaLista);
@@ -187,6 +191,18 @@ public class AppView {
 				AppMain.videoWeb.cancel();
 				CardLayout cl = (CardLayout) (panelPrincipal.getLayout());
 				cl.show(panelPrincipal, "panelNuevaLista");
+			}
+		});
+	}
+	
+	private void crearManejadorBotonRecientes(JButton boton) {
+		boton.addActionListener(new ActionListener () {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				AppMain.videoWeb.cancel();
+				CardLayout cl = (CardLayout) (panelPrincipal.getLayout());
+				cl.show(panelPrincipal, "panelRecientes");
 			}
 		});
 	}
