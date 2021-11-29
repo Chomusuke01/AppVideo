@@ -6,6 +6,7 @@ import javax.swing.ScrollPaneConstants;
 
 import umu.tds.AppVideo.controlador.ControladorAppVideo;
 import umu.tds.AppVideo.modelo.ListaReproduccion;
+import umu.tds.AppVideo.modelo.Video;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -14,11 +15,15 @@ import java.awt.GridBagConstraints;
 import javax.swing.JLabel;
 import javax.swing.JComboBox;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import java.awt.CardLayout;
 
 public class PanelMisListas extends JPanel {
 
@@ -32,6 +37,9 @@ public class PanelMisListas extends JPanel {
 	private JPanel panel_resultados;
 	private JPanel panel_centro;
 	private ListaVideos listaRep;
+	private PanelReproductor reproductor;
+	private JPanel panelVacio;
+	private List<Video> listaActual;
 
 	public PanelMisListas() {
 		setPreferredSize(new Dimension(970, 620));
@@ -69,6 +77,7 @@ public class PanelMisListas extends JPanel {
 		gbc_comboBox.gridx = 1;
 		gbc_comboBox.gridy = 1;
 		panel_seleccion.add(comboBoxLista, gbc_comboBox);
+		crearManejedorCombobox(comboBoxLista);
 		
 		btnReproducir = new JButton("Reproducir");
 		GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
@@ -77,6 +86,7 @@ public class PanelMisListas extends JPanel {
 		gbc_btnNewButton.gridx = 1;
 		gbc_btnNewButton.gridy = 2;
 		panel_seleccion.add(btnReproducir, gbc_btnNewButton);
+		crearManejadorBtnReproducir(btnReproducir);
 		
 		panel_cancelar = new JPanel();
 		panel_oeste.add(panel_cancelar, BorderLayout.SOUTH);
@@ -99,6 +109,7 @@ public class PanelMisListas extends JPanel {
 		
 		panel_centro = new JPanel();
 		add(panel_centro, BorderLayout.CENTER);
+		panel_centro.setLayout(new CardLayout(0, 0));
 		
 		listaRep = new ListaVideos(new DefaultListModel<MiniaturaVideo>(),120,150);
 		
@@ -109,7 +120,10 @@ public class PanelMisListas extends JPanel {
 		scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		panel_resultados.add(scroll);
 		
-
+		reproductor = new PanelReproductor();
+		panelVacio = new JPanel();
+		panel_centro.add(panelVacio,"vacio");
+		panel_centro.add(reproductor,"reproductor");
 	}
 	
 	private void cargarListas() {
@@ -122,5 +136,39 @@ public class PanelMisListas extends JPanel {
 
 	public void actualizar() {
 		cargarListas();
+		CardLayout cl = (CardLayout) (panel_centro.getLayout());
+		cl.show(panel_centro, "vacio");
+		listaRep.reiniciar();
+		listaActual = null;
+	}
+	
+	private void crearManejadorBtnReproducir(JButton btn) {
+		btn.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int videoSeleccionado = listaRep.getSelectedIndex();
+				if (videoSeleccionado >= 0 && listaActual != null) {
+					reproductor.reproducirVideo(AppMain.videoWeb, listaActual.get(videoSeleccionado));
+					CardLayout cl = (CardLayout) (panel_centro.getLayout());
+					cl.show(panel_centro, "reproductor");
+					ControladorAppVideo.getUnicaInstancia().nuevaReproduccion(listaActual.get(videoSeleccionado));
+				}
+			}
+		});
+	}
+	
+	private void crearManejedorCombobox(JComboBox<ListaReproduccion> comboBox) {
+		comboBox.addActionListener(new ActionListener (){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (comboBox.getSelectedIndex() > 0) {
+					listaActual = ControladorAppVideo.getUnicaInstancia().getListaReproduccion(((ListaReproduccion) comboBox.getSelectedItem()).getNombre());
+					listaRep.reiniciar();
+					listaRep.añadirElementos(listaActual.stream().map(v -> new MiniaturaVideo(v.getTitulo(),v.getUrl(),0,150,120)).collect(Collectors.toList()));
+				}	
+			}
+			
+		});
 	}
 }

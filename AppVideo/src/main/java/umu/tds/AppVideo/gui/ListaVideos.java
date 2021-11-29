@@ -34,6 +34,7 @@ public class ListaVideos extends JList<MiniaturaVideo> {
 	
 	public void reiniciar () {
 		model = new DefaultListModel<MiniaturaVideo>();
+		this.setModel(model);
 	}
 	
 	public MiniaturaVideo eliminarElemento(int indice) {

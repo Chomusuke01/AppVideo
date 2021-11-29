@@ -137,6 +137,7 @@ public class AppView {
 	private void crearManejadorBotonLogout(JButton btnLogout) {
 		btnLogout.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				AppMain.videoWeb.cancel();
 				LoginView loginView = new LoginView();
 				loginView.mostrarVentana();
 				frmApp.dispose();
