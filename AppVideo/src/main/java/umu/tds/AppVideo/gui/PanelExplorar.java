@@ -247,6 +247,7 @@ public class PanelExplorar extends JPanel {
 					int videoSeleccionado = tabla.getSelectedRow()*NUM_COLUMNAS_RESULTADO + tabla.getSelectedColumn();
 					CardLayout cl = null;
 					if (videoSeleccionado < busquedaActual.size()) {
+						ControladorAppVideo.getUnicaInstancia().añadirVideoReciente(busquedaActual.get(videoSeleccionado));
 						((PanelReproductor) reproductor).reproducirVideo(AppMain.videoWeb,busquedaActual.get(videoSeleccionado));
 						ControladorAppVideo.getUnicaInstancia().nuevaReproduccion(busquedaActual.get(videoSeleccionado));
 						cl = ((CardLayout) panelExplorar.getLayout());

@@ -142,10 +142,13 @@ public class Usuario {
 	
 	public void addReciente (Video reciente) {
 		
-		if (recientes.size() >= 5) { // Provisional
-			recientes.removeLast();
+		if (!recientes.contains(reciente)) {
+			
+			if (recientes.size() >= 5) {
+				recientes.removeLast();
+			}
+			recientes.addFirst(reciente);
 		}
-		recientes.addFirst(reciente);
 	}
 	
 	public ListaReproduccion añadirNuevoVideo(String lista, Video v) {

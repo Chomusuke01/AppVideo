@@ -15,15 +15,15 @@ import java.awt.BorderLayout;
 
 public class PanelRecientes extends JPanel {
 	
+	
+	private static final long serialVersionUID = 1L;
 	private static final int NUM_COLUMNAS_RESULTADO = 4;
 	private JPanel panel_oeste;
 	private JPanel panel_centro;
 	private List<Video> listaRecientes;
 	private ListaVideos listaRep;
 	private TablaBusqueda resultadoBusqueda;
-	/**
-	 * Create the panel.
-	 */
+
 	public PanelRecientes() {
 		setPreferredSize(new Dimension(970, 620));
 		setMinimumSize(new Dimension(970, 620));
@@ -39,9 +39,9 @@ public class PanelRecientes extends JPanel {
 		listaRep = new ListaVideos(new DefaultListModel<MiniaturaVideo>(),120,150);
 		JScrollPane scrollLista=new JScrollPane(listaRep);
 		
-		scrollLista.setMinimumSize(new Dimension(220,615));
-		scrollLista.setPreferredSize(new Dimension(220,615));
-		scrollLista.setMaximumSize(new Dimension(220,615));
+		scrollLista.setMinimumSize(new Dimension(220,550));
+		scrollLista.setPreferredSize(new Dimension(220,550));
+		scrollLista.setMaximumSize(new Dimension(220,550));
 		
 		scrollLista.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		panel_oeste.add(scrollLista);
@@ -53,6 +53,9 @@ public class PanelRecientes extends JPanel {
 		scrollBusqueda.setMaximumSize(new Dimension(745,615));
 		panel_centro.add(scrollBusqueda);
 		
+	}
+	
+	public void mostrarRecientes() {
 		listaRecientes = ControladorAppVideo.getUnicaInstancia().getListaRecientes();
 		listaRep.reiniciar();
 		listaRep.añadirElementos(listaRecientes.stream().map(v -> new MiniaturaVideo(v.getTitulo(),v.getUrl(),0,150,120)).collect(Collectors.toList()));

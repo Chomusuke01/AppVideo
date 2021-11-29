@@ -204,6 +204,7 @@ public class AppView {
 				AppMain.videoWeb.cancel();
 				CardLayout cl = (CardLayout) (panelPrincipal.getLayout());
 				cl.show(panelPrincipal, "panelRecientes");
+				((PanelRecientes) panelRecientes).mostrarRecientes();
 			}
 		});
 	}

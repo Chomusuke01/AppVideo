@@ -138,4 +138,9 @@ public class ControladorAppVideo {
 	public List<ListaReproduccion> getListasReproduccion(){
 		return usuarioActual.getListasVideos();
 	}
+	
+	public void añadirVideoReciente(Video video) {
+		usuarioActual.addReciente(video);
+		adaptadorUsuario.modificarUsuario(usuarioActual);
+	}
 }
