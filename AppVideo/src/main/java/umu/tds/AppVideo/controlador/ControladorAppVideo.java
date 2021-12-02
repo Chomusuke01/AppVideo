@@ -6,11 +6,13 @@ import java.util.List;
 
 import umu.tds.AppVideo.modelo.CatalogoUsuarios;
 import umu.tds.AppVideo.modelo.CatalogoVideos;
+import umu.tds.AppVideo.modelo.Etiqueta;
 import umu.tds.AppVideo.modelo.ListaReproduccion;
 import umu.tds.AppVideo.modelo.Usuario;
 import umu.tds.AppVideo.modelo.Video;
 import umu.tds.AppVideo.persistencia.DAOException;
 import umu.tds.AppVideo.persistencia.FactoriaDAO;
+import umu.tds.AppVideo.persistencia.IAdaptadorEtiquetaDAO;
 import umu.tds.AppVideo.persistencia.IAdaptadorListaReproduccionDAO;
 import umu.tds.AppVideo.persistencia.IAdaptadorUsuarioDAO;
 import umu.tds.AppVideo.persistencia.IAdaptadorVideoDAO;
@@ -22,6 +24,7 @@ public class ControladorAppVideo {
 	private IAdaptadorUsuarioDAO adaptadorUsuario;
 	private IAdaptadorVideoDAO adaptadorVideo;
 	private IAdaptadorListaReproduccionDAO adaptadorListaReproduccion;
+	private IAdaptadorEtiquetaDAO adpatadorEtiqueta;
 
 	private CatalogoUsuarios catalogoUsuarios;
 	private CatalogoVideos catalogoVideos;
@@ -48,6 +51,7 @@ public class ControladorAppVideo {
 		adaptadorUsuario = factoria.getUsuarioDAO();
 		adaptadorVideo = factoria.getVideoDAO();
 		adaptadorListaReproduccion = factoria.getListaReproduccionDAO();
+		adpatadorEtiqueta = factoria.getEtiquetaDAO();
 	}
 	
 	private void inicializarCatalogos() {
@@ -140,7 +144,24 @@ public class ControladorAppVideo {
 	}
 	
 	public void añadirVideoReciente(Video video) {
-		usuarioActual.addReciente(video);
+		usuarioActual.nuevoReciente(video);
 		adaptadorUsuario.modificarUsuario(usuarioActual);
+	}
+	
+	public void modificarRecientes(List<Video> recientes) {
+		usuarioActual.modificarListaRecientes(recientes);
+		adaptadorUsuario.modificarUsuario(usuarioActual);
+	}
+	
+	public boolean añadirEtiqueta (Video v, String etiqueta) {
+		
+		Etiqueta e = new Etiqueta(etiqueta);
+		adpatadorEtiqueta.registrarEtiqueta(e);
+		if (v.addEtiqueta(e)) {
+			adaptadorVideo.modificarVideo(v);
+			return true;
+		}
+		adpatadorEtiqueta.borrarEtiqueta(e);
+		return false;
 	}
 }

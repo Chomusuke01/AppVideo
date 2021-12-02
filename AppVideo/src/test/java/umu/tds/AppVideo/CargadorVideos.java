@@ -17,6 +17,7 @@ public class CargadorVideos {
 //		AdaptadorVideoTDS.getUnicaInstancia().addVideo(new Video("https://www.youtube.com/watch?v=nbc7S3hWlgk","lovefool a"));
 //		AdaptadorVideoTDS.getUnicaInstancia().addVideo(new Video("https://www.youtube.com/watch?v=3wV3PhJFvg8","gonna go far"));
 //		AdaptadorVideoTDS.getUnicaInstancia().addVideo(new Video("https://www.youtube.com/watch?v=5JA07af-_Qs","bella y la bestia"));
+//		
 //		System.out.println("Videos cargados en la BD");
 		
 		

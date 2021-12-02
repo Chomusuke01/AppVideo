@@ -32,6 +32,10 @@ public class ListaVideos extends JList<MiniaturaVideo> {
 		model.addElement(min);
 	}
 	
+	public void añadirPrincipio(MiniaturaVideo min) {
+		model.add(0, min);
+	}
+	
 	public void reiniciar () {
 		model = new DefaultListModel<MiniaturaVideo>();
 		this.setModel(model);

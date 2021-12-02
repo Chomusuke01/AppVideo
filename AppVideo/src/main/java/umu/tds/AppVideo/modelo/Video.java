@@ -1,6 +1,7 @@
 package umu.tds.AppVideo.modelo;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -10,14 +11,13 @@ public class Video {
 	private int codigo;
 	private String titulo;
 	private int numReproducciones;
-	private LinkedList<Etiqueta> etiquetas;
+	private HashSet<Etiqueta> etiquetas;
 	
 	
-
 	public Video(String url, String titulo, Etiqueta...etiquetas ) {
 		this.url = url;
 		this.titulo = titulo;
-		this.etiquetas = new LinkedList<Etiqueta>(); //TODO Un video tiene al menos una etiqueta, pero no se que etiqueta poner.
+		this.etiquetas = new HashSet<Etiqueta>(); //TODO Un video tiene al menos una etiqueta, pero no se que etiqueta poner.
 		
 		Arrays.asList(etiquetas).stream()
 			.forEach(e -> this.etiquetas.add(e));
@@ -39,11 +39,12 @@ public class Video {
 		return new LinkedList<Etiqueta>(etiquetas);
 	}
 
-	//TODO Seguramente se tenga que tratar el caso de que las etiquetas esten repetidas y que las etiquetas esten disponibles.
-	public void addEtiqueta (Etiqueta e) {
-		etiquetas.add(e);
+
+	public boolean addEtiqueta (Etiqueta e) {
+		return etiquetas.add(e);
 	}
 	
+
 	public String getUrl() {
 		return url;
 	}

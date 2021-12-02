@@ -121,6 +121,10 @@ public class Usuario {
 		return new LinkedList<ListaReproduccion>(listasVideos);
 	}
 	
+	public void modificarListaRecientes(List<Video> listaModificada) {
+		recientes = new LinkedList<Video>(listaModificada);
+	}
+	
 	public List<Video> getVideosFromLista(String lista){
 		
 	
@@ -140,14 +144,25 @@ public class Usuario {
 		listasVideos.add(lista);
 	}
 	
+	// Metodo para añadir los videos recientes desde la BD
 	public void addReciente (Video reciente) {
+		recientes.add(reciente);
 		
-		if (!recientes.contains(reciente)) {
-			
-			if (recientes.size() >= 5) {
-				recientes.removeLast();
-			}
+	}
+	
+	// Metodo para añadir videos recientes desde la app
+	public void nuevoReciente(Video reciente){
+		
+		int index = recientes.indexOf(reciente);
+		if (index == -1) {
 			recientes.addFirst(reciente);
+		}else {
+			recientes.remove(index);
+			recientes.addFirst(reciente);
+		}
+		
+		if (recientes.size() > 5) {
+			recientes.removeLast();
 		}
 	}
 	

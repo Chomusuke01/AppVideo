@@ -5,17 +5,20 @@ import java.awt.Dimension;
 import javax.swing.JPanel;
 
 import tds.video.VideoWeb;
-
+import umu.tds.AppVideo.controlador.ControladorAppVideo;
 import umu.tds.AppVideo.modelo.Video;
 
 import java.awt.BorderLayout;
 import javax.swing.JLabel;
 import java.awt.Font;
-
-import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.Color;
 
 import javax.swing.border.BevelBorder;
+import javax.swing.JTextField;
+import javax.swing.JButton;
+
 
 
 public class PanelReproductor extends JPanel{
@@ -31,8 +34,13 @@ public class PanelReproductor extends JPanel{
 	private JLabel lblReproducciones;
 	private JPanel panelCentro;
 	private JPanel panelVideoWeb;
+	private JPanel panelLabel;
 	private JPanel panelEtiquetas;
 	private JPanel panelNuevaEtiqueta;
+	private JLabel lblNuevaEtiqueta;
+	private JTextField txtNuevaEtiqueta;
+	private JButton btnAñadir;
+	private Video videoActual;
 	
 	public PanelReproductor() {
 		this.setMaximumSize(new Dimension(970,620));
@@ -66,12 +74,26 @@ public class PanelReproductor extends JPanel{
 		panelVideoWeb = new JPanel();
 		panelCentro.add(panelVideoWeb, BorderLayout.NORTH);
 		
+		panelLabel = new JPanel();
+		panelCentro.add(panelLabel, BorderLayout.CENTER);
+		panelLabel.setLayout(new BorderLayout(0, 0));
+		
 		panelEtiquetas = new JPanel();
-		panelCentro.add(panelEtiquetas, BorderLayout.CENTER);
+		panelLabel.add(panelEtiquetas, BorderLayout.NORTH);
 		
 		panelNuevaEtiqueta = new JPanel();
-		panelCentro.add(panelNuevaEtiqueta, BorderLayout.SOUTH);
-		panelEtiquetas.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		panelLabel.add(panelNuevaEtiqueta, BorderLayout.CENTER);
+		
+		lblNuevaEtiqueta = new JLabel("Nueva etiqueta: ");
+		panelNuevaEtiqueta.add(lblNuevaEtiqueta);
+		
+		txtNuevaEtiqueta = new JTextField();
+		panelNuevaEtiqueta.add(txtNuevaEtiqueta);
+		txtNuevaEtiqueta.setColumns(10);
+		
+		btnAñadir = new JButton("Añadir");
+		panelNuevaEtiqueta.add(btnAñadir);
+		crearManejadorBtnAñadir(btnAñadir);
 	}
 	
 	
@@ -87,13 +109,33 @@ public class PanelReproductor extends JPanel{
 		panelEtiquetas.repaint();
 		
 		for (String etiqueta : video.getNombreEtiquetas()) {
-			JLabel label = new JLabel (etiqueta);
-			label.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-			label.setFont(new Font("Comic Sans MS", Font.PLAIN, 15));
-			label.setBackground(new Color(92,253,204));
-			label.setOpaque(true);
-			panelEtiquetas.add(label);
+			añadirEtiqueta(etiqueta);
 		}
+		videoActual = video;
 		videoWeb.playVideo(video.getUrl());
+	}
+	
+	private void añadirEtiqueta(String etiqueta) {
+		JLabel label = new JLabel (etiqueta);
+		label.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		label.setFont(new Font("Comic Sans MS", Font.PLAIN, 15));
+		label.setBackground(new Color(92,253,204));
+		label.setOpaque(true);
+		panelEtiquetas.add(label);
+	}
+	
+	private void crearManejadorBtnAñadir(JButton boton) {
+		
+		boton.addActionListener(new ActionListener () {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				if (!txtNuevaEtiqueta.getText().trim().isEmpty() && ControladorAppVideo.getUnicaInstancia().añadirEtiqueta(videoActual, txtNuevaEtiqueta.getText())) {
+					añadirEtiqueta(txtNuevaEtiqueta.getText());
+					panelEtiquetas.revalidate();	
+				}
+			}
+		});
 	}
 }
