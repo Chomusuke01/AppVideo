@@ -92,8 +92,8 @@ public class ControladorAppVideo {
 		return false;
 	}
 	
-	public List<Video> buscarVideos(String tituloVideo){
-		return catalogoVideos.realizarBusqueda(tituloVideo);
+	public List<Video> buscarVideos(String tituloVideo, List<String> etiquetas){
+		return catalogoVideos.realizarBusqueda(tituloVideo,etiquetas);
 	}
 	
 	public void nuevaReproduccion(Video video) {
@@ -163,5 +163,9 @@ public class ControladorAppVideo {
 		}
 		adpatadorEtiqueta.borrarEtiqueta(e);
 		return false;
+	}
+	
+	public List<String> getEtiquetasVideos(){
+		return catalogoVideos.getEtiquetasVideos();
 	}
 }

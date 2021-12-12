@@ -48,6 +48,7 @@ public class AppView {
 		frmApp.setMinimumSize(new Dimension(1100,720));
 		frmApp.setPreferredSize(new Dimension(1100,720));
 		frmApp.setBackground(Color.GRAY);
+		frmApp.setResizable(false);
 		
 		frmApp.getContentPane().add(addPanelNorte(),BorderLayout.NORTH);
 		panelPrincipal = addPanelPrincipal();
@@ -177,7 +178,7 @@ public class AppView {
 		boton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				AppMain.videoWeb.cancel();
-				((PanelExplorar) panelExplorar).cambiarExplorar();
+				((PanelExplorar) panelExplorar).updateChanges();
 				CardLayout cl = (CardLayout) (panelPrincipal.getLayout());
 				cl.show(panelPrincipal, "panelExplorar");
 			}

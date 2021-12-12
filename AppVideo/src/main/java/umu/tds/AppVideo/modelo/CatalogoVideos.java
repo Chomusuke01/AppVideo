@@ -1,13 +1,10 @@
 package umu.tds.AppVideo.modelo;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
+
 import java.util.stream.Collectors;
 
 import umu.tds.AppVideo.persistencia.DAOException;
@@ -49,10 +46,16 @@ public class CatalogoVideos {
 		videos.remove(video.getUrl());
 	}
 	
-	public List<Video> realizarBusqueda(String tituloVideo){
+	public List<Video> realizarBusqueda(String tituloVideo, List<String> etiquetas){
+		
+		if (etiquetas == null) {
+			return videos.values().stream()
+					.filter(v -> v.getTitulo().contains(tituloVideo))
+					.collect(Collectors.toList());
+		}
 		
 		return videos.values().stream()
-				.filter(v -> v.getTitulo().contains(tituloVideo))
+				.filter(v -> v.getTitulo().contains(tituloVideo) && v.contieneEtiquetas(etiquetas))
 				.collect(Collectors.toList());
 	}
 	
@@ -81,9 +84,27 @@ public class CatalogoVideos {
 //			i++;
 //		}
 	    
-	    return videos.values().stream()
-	    		.sorted((v1,v2) -> Integer.compare(v1.getNumReproducciones(), v2.getNumReproducciones()))
-	    		.collect(Collectors.toList());
+		List<Video> masVistos = videos.values().stream()
+				.sorted((v1,v2) -> Integer.compare(v1.getNumReproducciones(), v2.getNumReproducciones()))
+				.collect(Collectors.toList());
+		
+		if (masVistos.size() < 10) {
+			return masVistos;
+		}
+	    return masVistos.subList(0, 10);
 	}
 	
+	public List<String> getEtiquetasVideos(){
+		
+		HashSet<String> etiquetas = new HashSet<String>();
+		
+		for(Video v : videos.values()) {
+			List<String> videoLabel = v.getNombreEtiquetas();
+			
+			if (videoLabel.size() > 0) {
+				etiquetas.addAll(videoLabel);
+			}
+		}
+		return new LinkedList<String>(etiquetas);
+	}
 }

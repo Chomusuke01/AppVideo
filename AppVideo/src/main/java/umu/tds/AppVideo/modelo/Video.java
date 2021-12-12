@@ -82,6 +82,18 @@ public class Video {
 		return etiquetas.stream().map(e -> e.getNombre()).collect(Collectors.toList());
 	}
 
+	public boolean contieneEtiquetas (List<String> etiquetas) {
+		
+		List <String> etiquetasVideo = this.getNombreEtiquetas();
+		
+		for (String etiqueta : etiquetas) {
+			if (!etiquetasVideo.contains(etiqueta)) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

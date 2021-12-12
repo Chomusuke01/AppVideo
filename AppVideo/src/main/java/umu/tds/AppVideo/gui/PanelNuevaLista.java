@@ -222,7 +222,7 @@ public class PanelNuevaLista extends JPanel {
 					JOptionPane.showMessageDialog(panelPrincipal, "Campo de búsqueda vacio",
 							"Error búsqueda", JOptionPane.ERROR_MESSAGE);
 				}else {
-					List<Video> resultados = ControladorAppVideo.getUnicaInstancia().buscarVideos(txtBusqueda.getText());
+					List<Video> resultados = ControladorAppVideo.getUnicaInstancia().buscarVideos(txtBusqueda.getText(),null);
 					if (resultados.size() == 0) {
 						JOptionPane.showMessageDialog(panelPrincipal, "No se han encontrado resultados para " + "\"" + txtBusqueda.getText() + "\"",
 								"Buscar", JOptionPane.INFORMATION_MESSAGE);
