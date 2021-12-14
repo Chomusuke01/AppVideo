@@ -11,12 +11,16 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JSeparator;
 import javax.swing.border.BevelBorder;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import umu.tds.AppVideo.controlador.ControladorAppVideo;
+import javax.swing.JMenuBar;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 
 public class AppView {
 
@@ -33,6 +37,14 @@ public class AppView {
 	private JPanel panelNuevaLista;
 	private JPanel panelMisListas;
 	private JPanel panelRecientes;
+	private JPanel panelApp;
+	private JPanel panelMenu;
+	private PanelMasVistos panelTop10;
+	private JMenuBar menuBar;
+	private JMenu mnPremium;
+	private JMenu mnFiltro;
+	private JMenuItem mntmPDF;
+	private JMenuItem mntmMasVistos;
 
 	public AppView() {
 		initialize();
@@ -44,15 +56,14 @@ public class AppView {
 		
 		frmApp.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmApp.setBounds(100, 100, 1100, 720);
-		frmApp.setMaximumSize(new Dimension(1100,720));
-		frmApp.setMinimumSize(new Dimension(1100,720));
-		frmApp.setPreferredSize(new Dimension(1100,720));
+		frmApp.setMaximumSize(new Dimension(1100,750));
+		frmApp.setMinimumSize(new Dimension(1100,750));
+		frmApp.setPreferredSize(new Dimension(1100,750));
 		frmApp.setBackground(Color.GRAY);
 		frmApp.setResizable(false);
 		
-		frmApp.getContentPane().add(addPanelNorte(),BorderLayout.NORTH);
+		
 		panelPrincipal = addPanelPrincipal();
-		frmApp.getContentPane().add(panelPrincipal,BorderLayout.CENTER);
 		panelExplorar = new PanelExplorar();
 		panelPrincipal.add(panelExplorar,"panelExplorar");
 		panelNuevaLista = new PanelNuevaLista();
@@ -61,7 +72,42 @@ public class AppView {
 		panelPrincipal.add(panelMisListas,"panelMisListas");
 		panelRecientes = new PanelRecientes();
 		panelPrincipal.add(panelRecientes,"panelRecientes");
+		panelTop10 = new PanelMasVistos();
+		panelPrincipal.add(panelTop10,"top10");
+		
+		panelApp = new JPanel();
+		panelMenu = new JPanel();
+		FlowLayout flowLayout = (FlowLayout) panelMenu.getLayout();
+		flowLayout.setAlignment(FlowLayout.LEFT);
+		panelApp.setLayout(new BorderLayout(0, 0));
+		
+		panelApp.add(panelPrincipal,BorderLayout.CENTER);
+		panelApp.add(addPanelNorte(),BorderLayout.NORTH);
+		
+		frmApp.getContentPane().add(panelApp,BorderLayout.CENTER);
+		frmApp.getContentPane().add(panelMenu,BorderLayout.NORTH);
+		
+		menuBar = crearMenu();
+		panelMenu.add(menuBar);
+		
 	}
+
+	private JMenuBar crearMenu() {
+		JMenuBar menu = new JMenuBar();
+		mnPremium = new JMenu("Premium");
+		menu.add(mnPremium);
+		mnFiltro = new JMenu("Filtro");
+		mnPremium.add(mnFiltro);
+		mnPremium.add(new JSeparator());
+		mntmPDF = new JMenuItem("Generar PDF");
+		mnPremium.add(mntmPDF);
+		mnPremium.add(new JSeparator());
+		mntmMasVistos = new JMenuItem("TOP 10");
+		crearManejadorTop10();
+		mnPremium.add(mntmMasVistos);
+		return menu;
+	}
+	
 	
 	private JPanel addPanelPrincipal() {
 		
@@ -208,6 +254,27 @@ public class AppView {
 				((PanelRecientes) panelRecientes).mostrarRecientes();
 			}
 		});
+	}
+	
+	private void crearManejadorTop10() {
+		mntmMasVistos.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				if(ControladorAppVideo.getUnicaInstancia().isUsuarioPremium()) {
+					AppMain.videoWeb.cancel();
+					panelTop10.mostrarTop10();
+					CardLayout cl = (CardLayout) (panelPrincipal.getLayout());
+					cl.show(panelPrincipal, "top10");
+				}else {
+					errorPremium();
+				}
+			}
+		});
+	}
+	
+	private void errorPremium() {
+		JOptionPane.showMessageDialog(panelApp,"Tienes que ser PREMIUM para acceder a esta funcionalidad",
+				"PREMIUM", JOptionPane.INFORMATION_MESSAGE);
 	}
 }
 

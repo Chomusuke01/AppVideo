@@ -90,7 +90,7 @@ public class PanelExplorar extends JPanel {
 		listEtiquetas.setMinimumSize(new Dimension(60, 50));
 		listEtiquetas.setMaximumSize(new Dimension(60, 50));
 		modelListaEtiquetas = new DefaultListModel<String>();
-		modelListaEtiquetas.addAll(ControladorAppVideo.getUnicaInstancia().getEtiquetasVideos());
+		//modelListaEtiquetas.addAll(ControladorAppVideo.getUnicaInstancia().getEtiquetasVideos());
 		listEtiquetas.setModel(modelListaEtiquetas);
 		crearEventoRatonLista(listEtiquetas);
 		

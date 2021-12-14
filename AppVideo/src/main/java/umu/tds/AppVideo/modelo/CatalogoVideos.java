@@ -85,7 +85,7 @@ public class CatalogoVideos {
 //		}
 	    
 		List<Video> masVistos = videos.values().stream()
-				.sorted((v1,v2) -> Integer.compare(v1.getNumReproducciones(), v2.getNumReproducciones()))
+				.sorted((v1,v2) -> -Integer.compare(v1.getNumReproducciones(), v2.getNumReproducciones()))
 				.collect(Collectors.toList());
 		
 		if (masVistos.size() < 10) {

@@ -308,9 +308,9 @@ public class PanelNuevaLista extends JPanel {
 		});
 	}
 	
-	private void crearManejadorBtnNuevaBusuqeda() {
-		
-	}
+//	private void crearManejadorBtnNuevaBusuqeda() {
+//		
+//	}
 	
 	private class MyTableModel extends DefaultTableModel {
         private static final long serialVersionUID = 1L;

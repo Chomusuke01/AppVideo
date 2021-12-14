@@ -92,6 +92,10 @@ public class ControladorAppVideo {
 		return false;
 	}
 	
+	public boolean isUsuarioPremium() {
+		return usuarioActual.isPremium();
+	}
+	
 	public List<Video> buscarVideos(String tituloVideo, List<String> etiquetas){
 		return catalogoVideos.realizarBusqueda(tituloVideo,etiquetas);
 	}
