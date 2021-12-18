@@ -1,12 +1,17 @@
 package umu.tds.AppVideo.controlador;
 
 
+import java.io.FileNotFoundException;
 import java.util.Date;
 import java.util.List;
 
+import com.itextpdf.text.DocumentException;
+
+import umu.tds.AppVideo.gui.PdfGenerator;
 import umu.tds.AppVideo.modelo.CatalogoUsuarios;
 import umu.tds.AppVideo.modelo.CatalogoVideos;
 import umu.tds.AppVideo.modelo.Etiqueta;
+import umu.tds.AppVideo.modelo.FiltroVideo;
 import umu.tds.AppVideo.modelo.ListaReproduccion;
 import umu.tds.AppVideo.modelo.Usuario;
 import umu.tds.AppVideo.modelo.Video;
@@ -97,7 +102,7 @@ public class ControladorAppVideo {
 	}
 	
 	public List<Video> buscarVideos(String tituloVideo, List<String> etiquetas){
-		return catalogoVideos.realizarBusqueda(tituloVideo,etiquetas);
+		return usuarioActual.filtrarVideos(catalogoVideos.realizarBusqueda(tituloVideo,etiquetas));
 	}
 	
 	public void nuevaReproduccion(Video video) {
@@ -171,5 +176,20 @@ public class ControladorAppVideo {
 	
 	public List<String> getEtiquetasVideos(){
 		return catalogoVideos.getEtiquetasVideos();
+	}
+	
+	public boolean generarPDF() {
+		
+		try {
+			PdfGenerator.generarPDF(usuarioActual.getListasVideos(), usuarioActual.getUsuario());
+		} catch (FileNotFoundException | DocumentException e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+	
+	public void cambiarFiltro(FiltroVideo filtro) {
+		usuarioActual.cambiarFiltro(filtro);
 	}
 }

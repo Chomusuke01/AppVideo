@@ -17,7 +17,7 @@ public class Usuario {
 	private int codigo;
 	private LinkedList<Video> recientes;
 	private LinkedList<ListaReproduccion> listasVideos;
-	
+	private Filtro filtro;
 	
 	public Usuario(String nombre, String apellidos, String email, String usuario, String contraseña, Date fechaNacimiento) {
 		codigo = 0;
@@ -30,6 +30,7 @@ public class Usuario {
 		this.premium = false;
 		listasVideos = new LinkedList<ListaReproduccion>();
 		recientes = new LinkedList<Video>();
+		filtro = new Filtro(new NoFiltro());
 	}
 
 	public int getCodigo() {
@@ -187,4 +188,14 @@ public class Usuario {
 		
 		return listaRep;
 	}
+	
+	public List<Video> filtrarVideos(List<Video> videos) {
+		
+		return videos.stream().filter(v -> filtro.isVideoOK(v)).collect(Collectors.toList());
+	}
+	
+	public void cambiarFiltro(FiltroVideo filtro) {
+		this.filtro.setFiltro(filtro);
+	}
+	
 }

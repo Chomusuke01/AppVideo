@@ -18,6 +18,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import umu.tds.AppVideo.controlador.ControladorAppVideo;
+import umu.tds.AppVideo.modelo.FiltroAburridos;
+import umu.tds.AppVideo.modelo.FiltroVideo;
+import umu.tds.AppVideo.modelo.NoFiltro;
+
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -45,6 +49,8 @@ public class AppView {
 	private JMenu mnFiltro;
 	private JMenuItem mntmPDF;
 	private JMenuItem mntmMasVistos;
+	private JMenuItem mntmNoFiltro;
+	private JMenuItem mntmFiltroAburridos;
 
 	public AppView() {
 		initialize();
@@ -98,8 +104,18 @@ public class AppView {
 		menu.add(mnPremium);
 		mnFiltro = new JMenu("Filtro");
 		mnPremium.add(mnFiltro);
+		
+		mntmNoFiltro = new JMenuItem("No filtro");
+		mnFiltro.add(mntmNoFiltro);
+		crearManejadorFiltros(mntmNoFiltro, new NoFiltro());
+		
+		mntmFiltroAburridos = new JMenuItem("Aburridos");
+		mnFiltro.add(mntmFiltroAburridos);
+		crearManejadorFiltros(mntmFiltroAburridos, new FiltroAburridos());
+		
 		mnPremium.add(new JSeparator());
 		mntmPDF = new JMenuItem("Generar PDF");
+		crearManejadorPdf();
 		mnPremium.add(mntmPDF);
 		mnPremium.add(new JSeparator());
 		mntmMasVistos = new JMenuItem("TOP 10");
@@ -276,15 +292,37 @@ public class AppView {
 		JOptionPane.showMessageDialog(panelApp,"Tienes que ser PREMIUM para acceder a esta funcionalidad",
 				"PREMIUM", JOptionPane.INFORMATION_MESSAGE);
 	}
+	
+	private void crearManejadorPdf() {
+		mntmPDF.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				if (ControladorAppVideo.getUnicaInstancia().isUsuarioPremium()) {
+					
+					if (!ControladorAppVideo.getUnicaInstancia().generarPDF()) {
+						JOptionPane.showMessageDialog(panelApp,"Ha ocurrido un error al generar el PDF",
+								"ERROR PDF", JOptionPane.ERROR_MESSAGE);
+					}else {
+						JOptionPane.showMessageDialog(panelApp,"PDF generado con éxito",
+								"PDF", JOptionPane.INFORMATION_MESSAGE);
+					}
+					
+				}else {
+					errorPremium();
+				}
+			}
+		});
+	}
+	
+	private void crearManejadorFiltros(JMenuItem menuItem, FiltroVideo filtro) {
+		menuItem.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				ControladorAppVideo.getUnicaInstancia().cambiarFiltro(filtro);
+			}
+		});
+	}
 }
-
-
-
-
-
-
-
-
-
-
 
