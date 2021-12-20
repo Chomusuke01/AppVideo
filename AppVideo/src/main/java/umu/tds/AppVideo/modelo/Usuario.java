@@ -1,12 +1,14 @@
 package umu.tds.AppVideo.modelo;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class Usuario {
 	
+	private final static String FILTRO_DEFECTO = "umu.tds.AppVideo.modelo.NoFiltro";
 	private String nombre;
 	private String apellidos;
 	private String email;
@@ -18,6 +20,7 @@ public class Usuario {
 	private LinkedList<Video> recientes;
 	private LinkedList<ListaReproduccion> listasVideos;
 	private Filtro filtro;
+	private String filtroActual;
 	
 	public Usuario(String nombre, String apellidos, String email, String usuario, String contraseña, Date fechaNacimiento) {
 		codigo = 0;
@@ -31,6 +34,15 @@ public class Usuario {
 		listasVideos = new LinkedList<ListaReproduccion>();
 		recientes = new LinkedList<Video>();
 		filtro = new Filtro(new NoFiltro());
+		filtroActual =  FILTRO_DEFECTO;
+	}
+
+	public String getFiltroActual() {
+		return filtroActual;
+	}
+
+	public void setFiltroActual(String filtroActual) {
+		this.filtroActual = filtroActual;
 	}
 
 	public int getCodigo() {
@@ -141,6 +153,16 @@ public class Usuario {
 				
 	}
 	
+	public List<Video> getVideosFromListas(){
+		
+		HashSet<Video> videos = new HashSet<Video>();
+		
+		for(ListaReproduccion lista : listasVideos) {
+			videos.addAll(lista.getVideos());
+		}
+		return new LinkedList<Video>(videos);
+	}
+	
 	public void addListaRep (ListaReproduccion lista) {
 		listasVideos.add(lista);
 	}
@@ -191,7 +213,7 @@ public class Usuario {
 	
 	public List<Video> filtrarVideos(List<Video> videos) {
 		
-		return videos.stream().filter(v -> filtro.isVideoOK(v)).collect(Collectors.toList());
+		return videos.stream().filter(v -> filtro.isVideoOK(v,this)).collect(Collectors.toList());
 	}
 	
 	public void cambiarFiltro(FiltroVideo filtro) {

@@ -13,6 +13,7 @@ import umu.tds.AppVideo.modelo.CatalogoVideos;
 import umu.tds.AppVideo.modelo.Etiqueta;
 import umu.tds.AppVideo.modelo.FiltroVideo;
 import umu.tds.AppVideo.modelo.ListaReproduccion;
+import umu.tds.AppVideo.modelo.NoFiltro;
 import umu.tds.AppVideo.modelo.Usuario;
 import umu.tds.AppVideo.modelo.Video;
 import umu.tds.AppVideo.persistencia.DAOException;
@@ -89,6 +90,9 @@ public class ControladorAppVideo {
 		
 		if (usuarioActual.isPremium()) {
 			usuarioActual.setPremium(false);
+			NoFiltro f = new NoFiltro();
+			usuarioActual.setFiltroActual(f.getClass().getName());
+			usuarioActual.cambiarFiltro(f);
 			adaptadorUsuario.modificarUsuario(usuarioActual);
 			return true;
 		}
@@ -190,6 +194,8 @@ public class ControladorAppVideo {
 	}
 	
 	public void cambiarFiltro(FiltroVideo filtro) {
+		usuarioActual.setFiltroActual(filtro.getClass().getName());
 		usuarioActual.cambiarFiltro(filtro);
+		adaptadorUsuario.modificarUsuario(usuarioActual);
 	}
 }

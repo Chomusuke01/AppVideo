@@ -19,6 +19,8 @@ import java.awt.event.ActionListener;
 
 import umu.tds.AppVideo.controlador.ControladorAppVideo;
 import umu.tds.AppVideo.modelo.FiltroAburridos;
+import umu.tds.AppVideo.modelo.FiltroAdultos;
+import umu.tds.AppVideo.modelo.FiltroMisListas;
 import umu.tds.AppVideo.modelo.FiltroVideo;
 import umu.tds.AppVideo.modelo.NoFiltro;
 
@@ -51,6 +53,8 @@ public class AppView {
 	private JMenuItem mntmMasVistos;
 	private JMenuItem mntmNoFiltro;
 	private JMenuItem mntmFiltroAburridos;
+	private JMenuItem mntmMisListas;
+	private JMenuItem mntmFiltroAdultos;
 
 	public AppView() {
 		initialize();
@@ -102,6 +106,7 @@ public class AppView {
 		JMenuBar menu = new JMenuBar();
 		mnPremium = new JMenu("Premium");
 		menu.add(mnPremium);
+			
 		mnFiltro = new JMenu("Filtro");
 		mnPremium.add(mnFiltro);
 		
@@ -112,6 +117,15 @@ public class AppView {
 		mntmFiltroAburridos = new JMenuItem("Aburridos");
 		mnFiltro.add(mntmFiltroAburridos);
 		crearManejadorFiltros(mntmFiltroAburridos, new FiltroAburridos());
+		
+		mntmMisListas = new JMenuItem("Mis listas");
+		mnFiltro.add(mntmMisListas);
+		crearManejadorFiltros(mntmMisListas, new FiltroMisListas());
+		
+		mntmFiltroAdultos = new JMenuItem("Adultos");
+		mnFiltro.add(mntmFiltroAdultos);
+		
+		crearManejadorFiltros(mntmFiltroAdultos,new FiltroAdultos());
 		
 		mnPremium.add(new JSeparator());
 		mntmPDF = new JMenuItem("Generar PDF");
@@ -316,13 +330,18 @@ public class AppView {
 		});
 	}
 	
+	
 	private void crearManejadorFiltros(JMenuItem menuItem, FiltroVideo filtro) {
 		menuItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ControladorAppVideo.getUnicaInstancia().cambiarFiltro(filtro);
+				
+				if(ControladorAppVideo.getUnicaInstancia().isUsuarioPremium()) {
+					ControladorAppVideo.getUnicaInstancia().cambiarFiltro(filtro);
+				}else {
+					errorPremium();
+				}
 			}
 		});
 	}
 }
-

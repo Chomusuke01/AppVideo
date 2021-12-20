@@ -13,8 +13,8 @@ public class Filtro {
 		this.filtro = filtro;
 	}
 	
-	public boolean isVideoOK(Video video) {
-		return filtro.isVideoOK(video);
+	public boolean isVideoOK(Video video, Usuario u) {
+		return filtro.isVideoOK(video,u);
 	}
 	
 }

@@ -14,6 +14,7 @@ import beans.Entidad;
 import beans.Propiedad;
 import tds.driver.FactoriaServicioPersistencia;
 import tds.driver.ServicioPersistencia;
+import umu.tds.AppVideo.modelo.FiltroVideo;
 import umu.tds.AppVideo.modelo.ListaReproduccion;
 import umu.tds.AppVideo.modelo.Usuario;
 import umu.tds.AppVideo.modelo.Video;
@@ -31,6 +32,7 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO{
 	private static final String PREMIUM = "premium";
 	private static final String LISTAS_REPRODUCCION = "listas_reproduccion";
 	private static final String RECIENTES = "recientes";
+	private static final String FILTRO = "filtro";
 	
 	private static ServicioPersistencia servPersistencia;
 	private static AdaptadorUsuarioTDS unicaInstancia = null;
@@ -77,7 +79,8 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO{
 						new Propiedad (FECHA_NACIMIENTO,dateFormat.format(u.getFechaNacimiento())), new Propiedad (NICK,u.getUsuario()), new Propiedad(CONTRASEÑA,u.getContraseña()), 
 						new Propiedad(EMAIL,u.getEmail()), new Propiedad(PREMIUM,String.valueOf(u.isPremium())), 
 						new Propiedad (LISTAS_REPRODUCCION, obtenerCodigosListaRep(u.getListasVideos())), 
-						new Propiedad(RECIENTES, obtenerCodigosVideosRecientes(u.getRecientes())))));
+						new Propiedad(RECIENTES, obtenerCodigosVideosRecientes(u.getRecientes())),
+						new Propiedad(FILTRO,u.getFiltroActual()))));
 
 		eUsuario = servPersistencia.registrarEntidad(eUsuario);
 		// asignar identificador unico
@@ -93,6 +96,7 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO{
 				.map(u -> recuperarUsuario(u.getId())).collect(Collectors.toList());
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public Usuario recuperarUsuario(int codigo) {
 		
@@ -106,6 +110,8 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO{
 		String contraseña = servPersistencia.recuperarPropiedadEntidad(eUsuario, CONTRASEÑA);
 		String apellidos = servPersistencia.recuperarPropiedadEntidad(eUsuario, APELLIDOS);
 		String email = servPersistencia.recuperarPropiedadEntidad(eUsuario, EMAIL);
+		String filtro = servPersistencia.recuperarPropiedadEntidad(eUsuario, FILTRO);
+		
 		boolean premium = Boolean.valueOf(servPersistencia.recuperarPropiedadEntidad(eUsuario, PREMIUM));
 		Date fecha_nacimiento = null;
 		
@@ -119,6 +125,14 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO{
 		
 		u.setCodigo(eUsuario.getId());
 		u.setPremium(premium);
+		u.setFiltroActual(filtro);
+		
+		try {
+			FiltroVideo f = (FiltroVideo) Class.forName(filtro).newInstance();
+			u.cambiarFiltro(f);
+		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+			e.printStackTrace();
+		}
 		
 		PoolDAO.getUnicaInstancia().addObjeto(codigo, u);
 		
@@ -172,6 +186,8 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO{
 				prop.setValor(obtenerCodigosVideosRecientes(u.getRecientes()));
 			} else if (prop.getNombre().equals(PREMIUM)) {
 				prop.setValor(String.valueOf(u.isPremium()));
+			}else if (prop.getNombre().equals(FILTRO)) {
+				prop.setValor(u.getFiltroActual());
 			}
 			servPersistencia.modificarPropiedad(prop);
 		}
