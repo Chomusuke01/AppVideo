@@ -3,6 +3,7 @@ package umu.tds.AppVideo.controlador;
 
 import java.io.FileNotFoundException;
 import java.util.Date;
+import java.util.EventObject;
 import java.util.List;
 
 import com.itextpdf.text.DocumentException;
@@ -22,8 +23,10 @@ import umu.tds.AppVideo.persistencia.IAdaptadorEtiquetaDAO;
 import umu.tds.AppVideo.persistencia.IAdaptadorListaReproduccionDAO;
 import umu.tds.AppVideo.persistencia.IAdaptadorUsuarioDAO;
 import umu.tds.AppVideo.persistencia.IAdaptadorVideoDAO;
+import umu.tds.componente.VideosEvent;
+import umu.tds.componente.VideosListener;
 
-public class ControladorAppVideo {
+public class ControladorAppVideo implements VideosListener{
 	
 	private static ControladorAppVideo unicaInstancia;
 
@@ -199,4 +202,24 @@ public class ControladorAppVideo {
 		usuarioActual.cambiarFiltro(filtro);
 		adaptadorUsuario.modificarUsuario(usuarioActual);
 	}
+
+	@Override
+	public void nuevosVideos(EventObject e) {
+		if(e instanceof VideosEvent) {
+			VideosEvent evento = (VideosEvent)e;
+			for (umu.tds.componente.Video v : evento.getVideos().getVideo()) {
+				if(catalogoVideos.getVideo(v.getURL()) == null) {
+					Video vid = new Video(v.getURL(), v.getTitulo(), v.getEtiqueta().toArray(new Etiqueta[v.getEtiqueta().size()]));
+					System.out.println("Cargando: " + vid.getTitulo());
+					for (Etiqueta et : vid.getEtiquetas()) {
+						System.out.println("-" + et);
+					}
+					//catalogoVideos.addVideo(vid);
+					//adaptadorVideo.addVideo(vid);
+				}
+			}
+		}
+	}
+	
+	
 }

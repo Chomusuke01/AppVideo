@@ -16,6 +16,7 @@ import javax.swing.border.BevelBorder;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.EventObject;
 
 import umu.tds.AppVideo.controlador.ControladorAppVideo;
 import umu.tds.AppVideo.modelo.FiltroAburridos;
@@ -23,10 +24,14 @@ import umu.tds.AppVideo.modelo.FiltroAdultos;
 import umu.tds.AppVideo.modelo.FiltroMisListas;
 import umu.tds.AppVideo.modelo.FiltroVideo;
 import umu.tds.AppVideo.modelo.NoFiltro;
+import umu.tds.componente.ComponenteCargadorVideos;
 
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+
+import pulsador.IEncendidoListener;
+import pulsador.Luz;
 
 public class AppView {
 
@@ -55,6 +60,7 @@ public class AppView {
 	private JMenuItem mntmFiltroAburridos;
 	private JMenuItem mntmMisListas;
 	private JMenuItem mntmFiltroAdultos;
+	private Luz luz;
 
 	public AppView() {
 		initialize();
@@ -203,6 +209,10 @@ public class AppView {
 		crearManejadorBotonPremium(btnPremium);
 		panelbtn2.add(btnPremium);
 		
+		luz = new Luz();
+		panelNorteSuperior.add(luz, BorderLayout.CENTER);
+		crearManejadorPulsador();
+		
 		return panel_Norte;
 	}
 	
@@ -341,6 +351,18 @@ public class AppView {
 				}else {
 					errorPremium();
 				}
+			}
+		});
+	}
+	
+	private void crearManejadorPulsador() {
+		luz.addEncendidoListener(new IEncendidoListener() {
+			
+			@Override
+			public void enteradoCambioEncendido(EventObject arg0) {
+				ComponenteCargadorVideos cv = new ComponenteCargadorVideos();
+				cv.addVideosListener(ControladorAppVideo.getUnicaInstancia());
+				cv.setArchivoVideos("videos.xml");
 			}
 		});
 	}
