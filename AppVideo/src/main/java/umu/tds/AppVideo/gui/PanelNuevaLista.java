@@ -19,6 +19,7 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.table.DefaultTableModel;
 
 import umu.tds.AppVideo.controlador.ControladorAppVideo;
+import umu.tds.AppVideo.modelo.ListaReproduccion;
 import umu.tds.AppVideo.modelo.Video;
 
 import javax.swing.DefaultListModel;
@@ -48,9 +49,9 @@ public class PanelNuevaLista extends JPanel {
 	private JButton btnBuscarVideos;
 	private JButton btnNuevaBusqueda;
 	private JPanel panelPrincipal;
-	private List<Video> listaActual;
 	private List<Video> busquedaActual;
 	private ListaVideos listaRep;
+	private ListaReproduccion listaActual;
 	private TablaBusqueda resultadoBusqueda;
 	private String nombreListaActual;
 
@@ -256,7 +257,7 @@ public class PanelNuevaLista extends JPanel {
 						}
 					}else {
 						listaRep.reiniciar();
-						listaRep.añadirElementos(listaActual.stream().map(v -> new MiniaturaVideo(v.getTitulo(),v.getUrl(),0,150,120)).collect(Collectors.toList()));
+						listaRep.añadirElementos(listaActual.getVideos().stream().map(v -> new MiniaturaVideo(v.getTitulo(),v.getUrl(),0,150,120)).collect(Collectors.toList()));
 					}
 				}	
 			}

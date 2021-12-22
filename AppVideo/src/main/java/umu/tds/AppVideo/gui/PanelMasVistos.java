@@ -77,7 +77,8 @@ public class PanelMasVistos extends JPanel {
 					CardLayout cl = ((CardLayout) panel_centro.getLayout());
 					cl.show(panel_centro, "reproductor");
 					reproductor.reproducirVideo(AppMain.videoWeb, videoSel);
-					//ControladorAppVideo.getUnicaInstancia().nuevaReproduccion(videoSel);
+					ControladorAppVideo.getUnicaInstancia().añadirVideoReciente(videoSel);
+					ControladorAppVideo.getUnicaInstancia().nuevaReproduccion(videoSel);
 				}
 			}
 		});

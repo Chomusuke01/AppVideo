@@ -138,7 +138,7 @@ public class Usuario {
 		recientes = new LinkedList<Video>(listaModificada);
 	}
 	
-	public List<Video> getVideosFromLista(String lista){
+	public ListaReproduccion getListaRep(String lista){
 		
 	
 		if (listasVideos.stream()
@@ -146,10 +146,8 @@ public class Usuario {
 			return null;
 		}
 		
-		return   listasVideos.stream()
-				.filter(l -> l.getNombre().equals(lista))
-				.flatMap(l -> l.getVideos().stream())
-				.collect(Collectors.toList());
+		return  listasVideos.stream()
+				.filter(l -> l.getNombre().equals(lista)).findFirst().orElse(null);
 				
 	}
 	

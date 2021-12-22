@@ -6,7 +6,6 @@ import javax.swing.ScrollPaneConstants;
 
 import umu.tds.AppVideo.controlador.ControladorAppVideo;
 import umu.tds.AppVideo.modelo.ListaReproduccion;
-import umu.tds.AppVideo.modelo.Video;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -39,7 +38,7 @@ public class PanelMisListas extends JPanel {
 	private ListaVideos listaRep;
 	private PanelReproductor reproductor;
 	private JPanel panelVacio;
-	private List<Video> listaActual;
+	private ListaReproduccion listaActual;
 
 	public PanelMisListas() {
 		setPreferredSize(new Dimension(970, 620));
@@ -149,10 +148,11 @@ public class PanelMisListas extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				int videoSeleccionado = listaRep.getSelectedIndex();
 				if (videoSeleccionado >= 0 && listaActual != null) {
-					reproductor.reproducirVideo(AppMain.videoWeb, listaActual.get(videoSeleccionado));
+					reproductor.reproducirVideo(AppMain.videoWeb, listaActual.getVideos().get(videoSeleccionado));
 					CardLayout cl = (CardLayout) (panel_centro.getLayout());
 					cl.show(panel_centro, "reproductor");
-					ControladorAppVideo.getUnicaInstancia().nuevaReproduccion(listaActual.get(videoSeleccionado));
+					ControladorAppVideo.getUnicaInstancia().añadirVideoReciente(listaActual.getVideos().get(videoSeleccionado));
+					ControladorAppVideo.getUnicaInstancia().nuevaReproduccion(listaActual.getVideos().get(videoSeleccionado));
 				}
 			}
 		});
@@ -165,7 +165,7 @@ public class PanelMisListas extends JPanel {
 				if (comboBox.getSelectedIndex() > 0) {
 					listaActual = ControladorAppVideo.getUnicaInstancia().getListaReproduccion(((ListaReproduccion) comboBox.getSelectedItem()).getNombre());
 					listaRep.reiniciar();
-					listaRep.añadirElementos(listaActual.stream().map(v -> new MiniaturaVideo(v.getTitulo(),v.getUrl(),0,150,120)).collect(Collectors.toList()));
+					listaRep.añadirElementos(listaActual.getVideos().stream().map(v -> new MiniaturaVideo(v.getTitulo(),v.getUrl(),0,150,120)).collect(Collectors.toList()));
 				}	
 			}
 			

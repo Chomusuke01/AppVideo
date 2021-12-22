@@ -114,8 +114,9 @@ public class ControladorAppVideo {
 		adaptadorVideo.modificarVideo(video);
 	}
 	
-	public List<Video> getListaReproduccion(String nombre){
-		return catalogoUsuarios.getListaReproduccion(usuarioActual.getUsuario(), nombre);
+	public ListaReproduccion getListaReproduccion(String nombre){
+		
+		return usuarioActual.getListaRep(nombre);
 	}
 	
 	public List<Video> getListaMasVistos(){
