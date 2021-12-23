@@ -208,17 +208,25 @@ public class ControladorAppVideo implements VideosListener{
 		if(e instanceof VideosEvent) {
 			VideosEvent evento = (VideosEvent)e;
 			for (umu.tds.componente.Video v : evento.getVideos().getVideo()) {
+				
 				if(catalogoVideos.getVideo(v.getURL()) == null) {
-					Video vid = new Video(v.getURL(), v.getTitulo(), v.getEtiqueta().toArray(new Etiqueta[v.getEtiqueta().size()]));
-					System.out.println("Cargando: " + vid.getTitulo());
-					for (Etiqueta et : vid.getEtiquetas()) {
-						System.out.println("-" + et);
-					}
-					//catalogoVideos.addVideo(vid);
-					//adaptadorVideo.addVideo(vid);
+					Video vid = new Video(v.getURL(), v.getTitulo(), parseEtiquetas(v.getEtiqueta()));
+					catalogoVideos.addVideo(vid);
+					adaptadorVideo.addVideo(vid);
 				}
 			}
 		}
+	}
+	
+	private Etiqueta [] parseEtiquetas(List<String> etiquetasAnt) {
+		Etiqueta[] etiquetas = new Etiqueta[etiquetasAnt.size()];
+		
+		int i = 0;
+		for (String etiqueta : etiquetasAnt) {
+			etiquetas[i++] = new Etiqueta(etiqueta);
+		}
+		
+		return etiquetas;
 	}
 	
 	

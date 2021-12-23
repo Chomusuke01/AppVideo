@@ -1,8 +1,8 @@
 package umu.tds.AppVideo;
-
-import umu.tds.AppVideo.modelo.Etiqueta;
-import umu.tds.AppVideo.modelo.Video;
-import umu.tds.AppVideo.persistencia.AdaptadorVideoTDS;
+//
+//import umu.tds.AppVideo.modelo.Etiqueta;
+//import umu.tds.AppVideo.modelo.Video;
+//import umu.tds.AppVideo.persistencia.AdaptadorVideoTDS;
 
 public class CargadorVideos {
 
