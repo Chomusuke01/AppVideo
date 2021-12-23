@@ -208,7 +208,7 @@ public class ControladorAppVideo implements VideosListener{
 		if(e instanceof VideosEvent) {
 			VideosEvent evento = (VideosEvent)e;
 			for (umu.tds.componente.Video v : evento.getVideos().getVideo()) {
-				
+			
 				if(catalogoVideos.getVideo(v.getURL()) == null) {
 					Video vid = new Video(v.getURL(), v.getTitulo(), parseEtiquetas(v.getEtiqueta()));
 					catalogoVideos.addVideo(vid);

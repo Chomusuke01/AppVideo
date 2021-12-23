@@ -7,6 +7,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -65,7 +66,8 @@ public class AppView {
 	private JPanel panelLuz;
 	private Luz luz;
 	private Component horizontalStrut;
-	ComponenteCargadorVideos cv;
+	private ComponenteCargadorVideos cv;
+	private JFileChooser fileChooser;
 	
 	public AppView() {
 		initialize();
@@ -112,6 +114,7 @@ public class AppView {
 		
 		cv= new ComponenteCargadorVideos();
 		cv.addVideosListener(ControladorAppVideo.getUnicaInstancia());
+		fileChooser = new JFileChooser();
 
 	}
 
@@ -374,8 +377,9 @@ public class AppView {
 
 			@Override
 			public void enteradoCambioEncendido(EventObject arg0) {
-				
-				cv.setArchivoVideos("videos.xml");
+				fileChooser.showOpenDialog(fileChooser);
+				String ficheroXML = fileChooser.getSelectedFile().getAbsolutePath();
+				cv.setArchivoVideos(ficheroXML);
 			}
 		});
 	}

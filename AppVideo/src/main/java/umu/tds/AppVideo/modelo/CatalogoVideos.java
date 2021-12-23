@@ -50,12 +50,12 @@ public class CatalogoVideos {
 		
 		if (etiquetas == null) {
 			return videos.values().stream()
-					.filter(v -> v.getTitulo().contains(tituloVideo))
+					.filter(v -> v.getTitulo().toLowerCase().contains(tituloVideo.toLowerCase()))
 					.collect(Collectors.toList());
 		}
 		
 		return videos.values().stream()
-				.filter(v -> v.getTitulo().contains(tituloVideo) && v.contieneEtiquetas(etiquetas))
+				.filter(v -> v.getTitulo().toLowerCase().contains(tituloVideo.toLowerCase()) && v.contieneEtiquetas(etiquetas))
 				.collect(Collectors.toList());
 	}
 	
