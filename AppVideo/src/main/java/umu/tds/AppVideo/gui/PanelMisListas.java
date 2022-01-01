@@ -30,9 +30,7 @@ public class PanelMisListas extends JPanel {
 	private JComboBox<ListaReproduccion> comboBoxLista;
 	private JPanel panel_oeste;
 	private JPanel panel_seleccion;
-	private JPanel panel_cancelar;
 	private JButton btnReproducir;
-	private JButton btnCancelar;
 	private JPanel panel_resultados;
 	private JPanel panel_centro;
 	private ListaVideos listaRep;
@@ -86,22 +84,6 @@ public class PanelMisListas extends JPanel {
 		gbc_btnNewButton.gridy = 2;
 		panel_seleccion.add(btnReproducir, gbc_btnNewButton);
 		crearManejadorBtnReproducir(btnReproducir);
-		
-		panel_cancelar = new JPanel();
-		panel_oeste.add(panel_cancelar, BorderLayout.SOUTH);
-		GridBagLayout gbl_panel_cancelar = new GridBagLayout();
-		gbl_panel_cancelar.columnWidths = new int[]{33, 75, 0, 0};
-		gbl_panel_cancelar.rowHeights = new int[]{0, 20, 0};
-		gbl_panel_cancelar.columnWeights = new double[]{1.0, 0.0, 1.0, Double.MIN_VALUE};
-		gbl_panel_cancelar.rowWeights = new double[]{1.0, 1.0, Double.MIN_VALUE};
-		panel_cancelar.setLayout(gbl_panel_cancelar);
-		
-		btnCancelar = new JButton("Cancelar");
-		GridBagConstraints gbc_btnNewButton_1 = new GridBagConstraints();
-		gbc_btnNewButton_1.insets = new Insets(0, 0, 0, 5);
-		gbc_btnNewButton_1.gridx = 1;
-		gbc_btnNewButton_1.gridy = 1;
-		panel_cancelar.add(btnCancelar, gbc_btnNewButton_1);
 		
 		panel_resultados = new JPanel();
 		panel_oeste.add(panel_resultados, BorderLayout.CENTER);

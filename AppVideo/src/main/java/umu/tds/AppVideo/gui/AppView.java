@@ -14,9 +14,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.border.BevelBorder;
+
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import java.util.EventObject;
 
 import umu.tds.AppVideo.controlador.ControladorAppVideo;
@@ -25,7 +27,6 @@ import umu.tds.AppVideo.modelo.FiltroAdultos;
 import umu.tds.AppVideo.modelo.FiltroMisListas;
 import umu.tds.AppVideo.modelo.FiltroVideo;
 import umu.tds.AppVideo.modelo.NoFiltro;
-import umu.tds.componente.ComponenteCargadorVideos;
 
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
@@ -66,7 +67,7 @@ public class AppView {
 	private JPanel panelLuz;
 	private Luz luz;
 	private Component horizontalStrut;
-	private ComponenteCargadorVideos cv;
+	
 	private JFileChooser fileChooser;
 	
 	public AppView() {
@@ -86,14 +87,15 @@ public class AppView {
 		frmApp.setResizable(false);
 
 		panelPrincipal = addPanelPrincipal();
+		panelRecientes = new PanelRecientes();
+		((PanelRecientes) panelRecientes).mostrarRecientes();
+		panelPrincipal.add(panelRecientes, "panelRecientes");
 		panelExplorar = new PanelExplorar();
 		panelPrincipal.add(panelExplorar, "panelExplorar");
 		panelNuevaLista = new PanelNuevaLista();
 		panelPrincipal.add(panelNuevaLista, "panelNuevaLista");
 		panelMisListas = new PanelMisListas();
 		panelPrincipal.add(panelMisListas, "panelMisListas");
-		panelRecientes = new PanelRecientes();
-		panelPrincipal.add(panelRecientes, "panelRecientes");
 		panelTop10 = new PanelMasVistos();
 		panelPrincipal.add(panelTop10, "top10");
 
@@ -112,8 +114,7 @@ public class AppView {
 		menuBar = crearMenu();
 		panelMenu.add(menuBar);
 		
-		cv= new ComponenteCargadorVideos();
-		cv.addVideosListener(ControladorAppVideo.getUnicaInstancia());
+		
 		fileChooser = new JFileChooser();
 
 	}
@@ -228,6 +229,7 @@ public class AppView {
 
 		luz = new Luz();
 		panelLuz.add(luz);
+		luz.setColor(new Color(92,253,204));
 		crearManejadorPulsador();
 
 		return panel_Norte;
@@ -372,14 +374,19 @@ public class AppView {
 	}
 
 	private void crearManejadorPulsador() {
-		
+	
 		luz.addEncendidoListener(new IEncendidoListener() {
 
 			@Override
-			public void enteradoCambioEncendido(EventObject arg0) {
-				fileChooser.showOpenDialog(fileChooser);
-				String ficheroXML = fileChooser.getSelectedFile().getAbsolutePath();
-				cv.setArchivoVideos(ficheroXML);
+			public void enteradoCambioEncendido(EventObject ev) {
+				
+					try {
+						fileChooser.showOpenDialog(fileChooser);
+						String ficheroXML = fileChooser.getSelectedFile().getAbsolutePath();
+						ControladorAppVideo.getUnicaInstancia().cargarVideos(ficheroXML);
+					} catch (NullPointerException e) {
+						// No se ha seleccionado ningun fichero
+				}
 			}
 		});
 	}

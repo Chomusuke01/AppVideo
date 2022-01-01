@@ -42,7 +42,6 @@ public class PanelNuevaLista extends JPanel {
 	private JPanel panelBotones;
 	private JButton btnAñadir;
 	private JButton btnQuitar;
-	private JButton btnAceptar;
 	private JPanel panelResultados;
 	private JPanel panelCentro;
 	private JPanel panelNorte;
@@ -109,39 +108,34 @@ public class PanelNuevaLista extends JPanel {
 		gbc_btnNewButton_1.gridx = 0;
 		gbc_btnNewButton_1.gridy = 2;
 		panelBusqueda.add(btnEliminar, gbc_btnNewButton_1);
+		crearManejadorBtnEliminar(btnEliminar);
 		
 		panelBotones = new JPanel();
 		panelOeste.add(panelBotones, BorderLayout.SOUTH);
 		GridBagLayout gbl_panelBotones = new GridBagLayout();
-		gbl_panelBotones.columnWidths = new int[]{59, 63, 0, 0};
-		gbl_panelBotones.rowHeights = new int[]{23, 0, 0, 0};
-		gbl_panelBotones.columnWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
-		gbl_panelBotones.rowWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_panelBotones.columnWidths = new int[]{40, 63, 0, 40, 0};
+		gbl_panelBotones.rowHeights = new int[]{23, 0};
+		gbl_panelBotones.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_panelBotones.rowWeights = new double[]{0.0, Double.MIN_VALUE};
 		panelBotones.setLayout(gbl_panelBotones);
 		
 		btnAñadir = new JButton("Añadir");
 		GridBagConstraints gbc_btnNewButton_2 = new GridBagConstraints();
-		gbc_btnNewButton_2.insets = new Insets(0, 0, 5, 5);
+		gbc_btnNewButton_2.insets = new Insets(0, 0, 0, 5);
 		gbc_btnNewButton_2.anchor = GridBagConstraints.NORTHWEST;
-		gbc_btnNewButton_2.gridx = 0;
+		gbc_btnNewButton_2.gridx = 1;
 		gbc_btnNewButton_2.gridy = 0;
 		panelBotones.add(btnAñadir, gbc_btnNewButton_2);
 		crearManejadorBtnAñadir(btnAñadir);
 		
 		btnQuitar = new JButton("Quitar");
 		GridBagConstraints gbc_btnNewButton_3 = new GridBagConstraints();
-		gbc_btnNewButton_3.insets = new Insets(0, 0, 5, 0);
+		gbc_btnNewButton_3.anchor = GridBagConstraints.WEST;
+		gbc_btnNewButton_3.insets = new Insets(0, 0, 0, 5);
 		gbc_btnNewButton_3.gridx = 2;
 		gbc_btnNewButton_3.gridy = 0;
 		panelBotones.add(btnQuitar, gbc_btnNewButton_3);
 		crearManejadorBtnQuitar(btnQuitar);
-		
-		btnAceptar = new JButton("Aceptar");
-		GridBagConstraints gbc_btnNewButton_4 = new GridBagConstraints();
-		gbc_btnNewButton_4.insets = new Insets(0, 0, 0, 5);
-		gbc_btnNewButton_4.gridx = 1;
-		gbc_btnNewButton_4.gridy = 2;
-		panelBotones.add(btnAceptar, gbc_btnNewButton_4);
 		
 		panelResultados = new JPanel();
 		panelOeste.add(panelResultados, BorderLayout.CENTER);
@@ -190,6 +184,7 @@ public class PanelNuevaLista extends JPanel {
 		gbc_btnNewButton_6.gridx = 2;
 		gbc_btnNewButton_6.gridy = 2;
 		panelNorte.add(btnNuevaBusqueda, gbc_btnNewButton_6);
+		crearManejadorBtnNuevaBusuqeda(btnNuevaBusqueda);
 		
 		panelPrincipal = new JPanel();
 		panelCentro.add(panelPrincipal, BorderLayout.CENTER);
@@ -253,7 +248,8 @@ public class PanelNuevaLista extends JPanel {
 						int res = JOptionPane.showConfirmDialog(panelPrincipal, "¿Desea crear la lista" + "\"" + txtLista.getText() + "\"?","Lista no encontrada", JOptionPane.YES_NO_OPTION);
 						
 						if (res == JOptionPane.YES_OPTION) {
-							ControladorAppVideo.getUnicaInstancia().añadirNuevaLista(txtLista.getText());
+							listaActual = ControladorAppVideo.getUnicaInstancia().añadirNuevaLista(txtLista.getText());
+							listaRep.reiniciar();
 						}
 					}else {
 						listaRep.reiniciar();
@@ -279,7 +275,7 @@ public class PanelNuevaLista extends JPanel {
 							"Error Añadir", JOptionPane.ERROR_MESSAGE);
 				}else {
 					Video nuevo = busquedaActual.get(videoSeleccionado);
-					if (ControladorAppVideo.getUnicaInstancia().añadirVideoLista(txtLista.getText(), nuevo)) {
+					if (ControladorAppVideo.getUnicaInstancia().añadirVideoLista(listaActual, nuevo)) {
 						listaRep.añadirElemento(new MiniaturaVideo(nuevo.getTitulo(), nuevo.getUrl(), 0, 150, 120));
 					}else {
 						JOptionPane.showMessageDialog(panelPrincipal, "El video ya está en la lista",
@@ -302,16 +298,44 @@ public class PanelNuevaLista extends JPanel {
 					JOptionPane.showMessageDialog(panelPrincipal, "Elige el video de la lista que quieres eliminar",
 							"Error eliminar", JOptionPane.ERROR_MESSAGE);
 				}else {
-					MiniaturaVideo v = listaRep.eliminarElemento(videoEliminar); 
-					ControladorAppVideo.getUnicaInstancia().eliminarVideoLista(txtLista.getText(), v.getTitulo(), v.getUrl());
+					MiniaturaVideo m = listaRep.eliminarElemento(videoEliminar); 
+					Video video = new Video(m.getUrl(),m.getTitulo());
+					ControladorAppVideo.getUnicaInstancia().eliminarVideoLista(listaActual, video);
 				}
 			}
 		});
 	}
 	
-//	private void crearManejadorBtnNuevaBusuqeda() {
-//		
-//	}
+	private void crearManejadorBtnNuevaBusuqeda(JButton boton) {
+		boton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				resultadoBusqueda.limpiarTabla();
+				txtBusqueda.setText("");
+				busquedaActual = null;
+				
+			}
+		});
+	}
+	
+	private void crearManejadorBtnEliminar(JButton boton) {
+		boton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (listaActual != null) {
+					ControladorAppVideo.getUnicaInstancia().eliminarLista(listaActual);
+					listaRep.reiniciar();
+					txtLista.setText("");
+				}else {
+					JOptionPane.showMessageDialog(panelPrincipal, "Elige la lista que quieres borrar",
+							"Error eliminar", JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		});
+	}
+	
 	
 	private class MyTableModel extends DefaultTableModel {
         private static final long serialVersionUID = 1L;

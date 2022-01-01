@@ -187,28 +187,18 @@ public class Usuario {
 		}
 	}
 	
-	public ListaReproduccion añadirNuevoVideo(String lista, Video v) {
-		
-		ListaReproduccion listaRep = listasVideos.stream()
-												 .filter(l -> l.getNombre().equals(lista))
-												 .findFirst().orElse(null); // Nunca va a devolver null por que estamos seguros de que la lista en este punto existe.
-		if (listaRep.añadirVideo(v)) { // No queremos videos repetidos en una lista.
-			return listaRep;
+	public void eliminarListaRep (ListaReproduccion lista) {
+		int listaBorrar = 0;
+		int i = 0;
+		for (ListaReproduccion listaReproduccion : listasVideos) {
+			if (listaReproduccion.getNombre().equals(lista.getNombre())) {
+				listaBorrar = i;
+			}
+			i++;
 		}
-		return null;
+		listasVideos.remove(listaBorrar);
 	}
-	
-	public ListaReproduccion eliminarVideoLista(String lista, Video v) {
-		
-		ListaReproduccion listaRep = listasVideos.stream()
-				 .filter(l -> l.getNombre().equals(lista))
-				 .findFirst().orElse(null);
-		
-		listaRep.eliminarVideo(v);
-		
-		return listaRep;
-	}
-	
+
 	public List<Video> filtrarVideos(List<Video> videos) {
 		
 		return videos.stream().filter(v -> filtro.isVideoOK(v,this)).collect(Collectors.toList());

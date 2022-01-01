@@ -23,6 +23,7 @@ import umu.tds.AppVideo.persistencia.IAdaptadorEtiquetaDAO;
 import umu.tds.AppVideo.persistencia.IAdaptadorListaReproduccionDAO;
 import umu.tds.AppVideo.persistencia.IAdaptadorUsuarioDAO;
 import umu.tds.AppVideo.persistencia.IAdaptadorVideoDAO;
+import umu.tds.componente.ComponenteCargadorVideos;
 import umu.tds.componente.VideosEvent;
 import umu.tds.componente.VideosListener;
 
@@ -38,6 +39,7 @@ public class ControladorAppVideo implements VideosListener{
 	private CatalogoUsuarios catalogoUsuarios;
 	private CatalogoVideos catalogoVideos;
 	private Usuario usuarioActual;
+	private static ComponenteCargadorVideos cv;
 
 	private ControladorAppVideo() {
 		inicializarAdaptadores(); 
@@ -45,8 +47,11 @@ public class ControladorAppVideo implements VideosListener{
 	}
 	
 	public static ControladorAppVideo getUnicaInstancia() {
-		if (unicaInstancia == null)
+		if (unicaInstancia == null) {
 			unicaInstancia = new ControladorAppVideo();
+			cv = new ComponenteCargadorVideos();
+			cv.addVideosListener(unicaInstancia);
+		}
 		return unicaInstancia;
 	}
 	
@@ -130,30 +135,35 @@ public class ControladorAppVideo implements VideosListener{
 		return usuarioActual.getRecientes();
 	}
 	
-	public void añadirNuevaLista(String lista) {
+	public ListaReproduccion  añadirNuevaLista(String lista) {
 		
 		ListaReproduccion listaRep = new ListaReproduccion(lista);
 		usuarioActual.addListaRep(listaRep);
 		adaptadorListaReproduccion.registrarListaRep(listaRep); /// Preguntar
 		adaptadorUsuario.modificarUsuario(usuarioActual);
+		return listaRep;
 		
 	}
 	
-	public boolean añadirVideoLista(String lista, Video v) {
+	public void eliminarLista(ListaReproduccion lista) {
+		usuarioActual.eliminarListaRep(lista);
+		adaptadorUsuario.modificarUsuario(usuarioActual);
+	}
+	
+	public boolean añadirVideoLista(ListaReproduccion lista, Video v) {
 		
-		ListaReproduccion listaModificada = usuarioActual.añadirNuevoVideo(lista, v);
-		if (listaModificada == null)
-		{
-			return false;
+		if (lista.añadirVideo(v)) {
+			adaptadorListaReproduccion.ModificarListaReproduccion(lista);
+			return true;
 		}
-		adaptadorListaReproduccion.ModificarListaReproduccion(listaModificada);
-		return true;
+		
+		return false;
 	}
 	
-	public void eliminarVideoLista(String lista, String titulo, String url) {
+	public void eliminarVideoLista(ListaReproduccion lista, Video video) {
 		
-		ListaReproduccion listaModificada = usuarioActual.eliminarVideoLista(lista, new Video(url,titulo));
-		adaptadorListaReproduccion.ModificarListaReproduccion(listaModificada);
+		lista.eliminarVideo(video);
+		adaptadorListaReproduccion.ModificarListaReproduccion(lista);
 	}
 	
 	public List<ListaReproduccion> getListasReproduccion(){
@@ -207,8 +217,9 @@ public class ControladorAppVideo implements VideosListener{
 	public void nuevosVideos(EventObject e) {
 		if(e instanceof VideosEvent) {
 			VideosEvent evento = (VideosEvent)e;
-			for (umu.tds.componente.Video v : evento.getVideos().getVideo()) {
 			
+			for (umu.tds.componente.Video v : evento.getVideos().getVideo()) {
+//				System.out.println(v.getTitulo());
 				if(catalogoVideos.getVideo(v.getURL()) == null) {
 					Video vid = new Video(v.getURL(), v.getTitulo(), parseEtiquetas(v.getEtiqueta()));
 					catalogoVideos.addVideo(vid);
@@ -216,6 +227,11 @@ public class ControladorAppVideo implements VideosListener{
 				}
 			}
 		}
+	}
+	
+	
+	public void cargarVideos(String ficheroXML){
+		cv.setArchivoVideos(ficheroXML);
 	}
 	
 	private Etiqueta [] parseEtiquetas(List<String> etiquetasAnt) {
