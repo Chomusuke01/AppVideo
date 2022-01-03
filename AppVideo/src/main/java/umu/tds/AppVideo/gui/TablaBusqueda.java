@@ -10,6 +10,7 @@ import javax.swing.table.TableColumnModel;
 
 import umu.tds.AppVideo.modelo.Video;
 
+// Clase para implementar una tabla de búsqueda.
 public class TablaBusqueda extends JTable {
 
 	
@@ -31,6 +32,7 @@ public class TablaBusqueda extends JTable {
 		this.numColumnas = numColumnas;
 	}
 	
+	// Ajustas el tamaño de las columnas al especificado
 	private void resizeColumnWidth(int width) {
 	    //Se obtiene el modelo de la columna
 	    TableColumnModel columnModel = this.getColumnModel();
@@ -41,10 +43,12 @@ public class TablaBusqueda extends JTable {
 	    }
 	}
 	
+	// vacia la tabla
 	public void limpiarTabla() {
 		this.setModel(new DefaultTableModel());
 	}
 	
+	// Devuelve los resultados en forma de tabla para su posterior representación
 	public Object [][] obtenerTablaResultados (List<Video> videos,int cellHeight, int cellWidth) {
 		
 		Object [][] data = new Object [(int) Math.ceil((double)videos.size()/numColumnas)][numColumnas];

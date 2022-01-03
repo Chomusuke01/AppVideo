@@ -22,6 +22,8 @@ import umu.tds.AppVideo.controlador.ControladorAppVideo;
 
 public class LoginView {
 
+	private static final int ALTO_VENTANA = 650;
+	private static final int ANCHO_VENTANA = 1000;
 	private JFrame frmLogin;
 	private JTextField textUsuario;
 	private JPasswordField textPassword;
@@ -38,7 +40,7 @@ public class LoginView {
 		frmLogin = new JFrame();
 		frmLogin.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		frmLogin.setBounds(100, 100, 1000, 650);
+		frmLogin.setBounds(100, 100, ANCHO_VENTANA, ALTO_VENTANA);
 		
 		JPanel panelPrincipal = new JPanel();
 		panelPrincipal.setBackground(Color.GRAY);

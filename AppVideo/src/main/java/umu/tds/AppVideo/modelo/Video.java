@@ -17,11 +17,8 @@ public class Video {
 	public Video(String url, String titulo, Etiqueta...etiquetas ) {
 		this.url = url;
 		this.titulo = titulo;
-		this.etiquetas = new HashSet<Etiqueta>(); //TODO Un video tiene al menos una etiqueta, pero no se que etiqueta poner.
-		
-		Arrays.asList(etiquetas).stream()
-			.forEach(e -> this.etiquetas.add(e));
-		
+		this.etiquetas = new HashSet<Etiqueta>(); 
+		this.etiquetas.addAll(Arrays.asList(etiquetas));
 		this.numReproducciones = 0;
 		codigo = 0;
 	}

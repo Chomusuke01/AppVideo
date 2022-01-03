@@ -28,6 +28,14 @@ import java.awt.Color;
 import java.awt.BorderLayout;
 
 public class PanelNuevaLista extends JPanel {
+	private static final int ALTO_SCROLL_TABLA = 480;
+	private static final int ANCHO_SCROLL_TABLA = 850;
+	private static final int ALTO_SCROLL = 400;
+	private static final int ANCHO_SCROLL = 220;
+	private static final int ANCHO_CELDA = 150;
+	private static final int ALTO_CELDA_LISTA = 120;
+	private static final int ALTO_PANEL = 620;
+	private static final int ANCHO_PANEL = 970;
 	/**
 	 * 
 	 */
@@ -59,9 +67,9 @@ public class PanelNuevaLista extends JPanel {
 	 */
 	public PanelNuevaLista() {
 		setBackground(Color.GRAY);
-		setPreferredSize(new Dimension(970, 620));
-		setMinimumSize(new Dimension(970, 620));
-		setMaximumSize(new Dimension(970, 620));
+		setPreferredSize(new Dimension(ANCHO_PANEL, ALTO_PANEL));
+		setMinimumSize(new Dimension(ANCHO_PANEL, ALTO_PANEL));
+		setMaximumSize(new Dimension(ANCHO_PANEL, ALTO_PANEL));
 		setLayout(new BorderLayout(0, 0));
 		
 		panelOeste = new JPanel();
@@ -189,21 +197,21 @@ public class PanelNuevaLista extends JPanel {
 		panelPrincipal = new JPanel();
 		panelCentro.add(panelPrincipal, BorderLayout.CENTER);
 		
-		listaRep = new ListaVideos(new DefaultListModel<MiniaturaVideo>(),120,150);
+		listaRep = new ListaVideos(new DefaultListModel<MiniaturaVideo>(),ALTO_CELDA_LISTA,ANCHO_CELDA);
 		JScrollPane scrollLista=new JScrollPane(listaRep);
 		
-		scrollLista.setMinimumSize(new Dimension(220,400));
-		scrollLista.setPreferredSize(new Dimension(220,400));
-		scrollLista.setMaximumSize(new Dimension(220,900));
+		scrollLista.setMinimumSize(new Dimension(ANCHO_SCROLL,ALTO_SCROLL));
+		scrollLista.setPreferredSize(new Dimension(ANCHO_SCROLL,ALTO_SCROLL));
+		scrollLista.setMaximumSize(new Dimension(ANCHO_SCROLL,ALTO_SCROLL));
 		
 		scrollLista.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		panelResultados.add(scrollLista);
 		
-		resultadoBusqueda = new TablaBusqueda(MiniaturaVideo.class, new MiniaturaVideoTableRenderer(), 150, 120, NUM_COLUMNAS_RESULTADO);
+		resultadoBusqueda = new TablaBusqueda(MiniaturaVideo.class, new MiniaturaVideoTableRenderer(), ANCHO_CELDA, ALTO_CELDA_LISTA, NUM_COLUMNAS_RESULTADO);
 		JScrollPane scrollBusqueda=new JScrollPane(resultadoBusqueda);
-		scrollBusqueda.setMinimumSize(new Dimension(850,480));
-		scrollBusqueda.setPreferredSize(new Dimension(850,480));
-		scrollBusqueda.setMaximumSize(new Dimension(850,480));
+		scrollBusqueda.setMinimumSize(new Dimension(ANCHO_SCROLL_TABLA,ALTO_SCROLL_TABLA));
+		scrollBusqueda.setPreferredSize(new Dimension(ANCHO_SCROLL_TABLA,ALTO_SCROLL_TABLA));
+		scrollBusqueda.setMaximumSize(new Dimension(ANCHO_SCROLL_TABLA,ALTO_SCROLL_TABLA));
 		panelPrincipal.add(scrollBusqueda);
 		
 	}
@@ -223,7 +231,7 @@ public class PanelNuevaLista extends JPanel {
 						JOptionPane.showMessageDialog(panelPrincipal, "No se han encontrado resultados para " + "\"" + txtBusqueda.getText() + "\"",
 								"Buscar", JOptionPane.INFORMATION_MESSAGE);
 					}else {
-						Object [][] data =  resultadoBusqueda.obtenerTablaResultados(resultados,150,120);
+						Object [][] data =  resultadoBusqueda.obtenerTablaResultados(resultados,ANCHO_CELDA,ALTO_CELDA_LISTA);
 						resultadoBusqueda.setModel(new MyTableModel(data, new String [] {"", "", "",""}));
 						busquedaActual = resultados;
 					}
@@ -253,7 +261,7 @@ public class PanelNuevaLista extends JPanel {
 						}
 					}else {
 						listaRep.reiniciar();
-						listaRep.añadirElementos(listaActual.getVideos().stream().map(v -> new MiniaturaVideo(v.getTitulo(),v.getUrl(),0,150,120)).collect(Collectors.toList()));
+						listaRep.añadirElementos(listaActual.getVideos().stream().map(v -> new MiniaturaVideo(v.getTitulo(),v.getUrl(),0,ANCHO_CELDA,ALTO_CELDA_LISTA)).collect(Collectors.toList()));
 					}
 				}	
 			}
@@ -276,7 +284,7 @@ public class PanelNuevaLista extends JPanel {
 				}else {
 					Video nuevo = busquedaActual.get(videoSeleccionado);
 					if (ControladorAppVideo.getUnicaInstancia().añadirVideoLista(listaActual, nuevo)) {
-						listaRep.añadirElemento(new MiniaturaVideo(nuevo.getTitulo(), nuevo.getUrl(), 0, 150, 120));
+						listaRep.añadirElemento(new MiniaturaVideo(nuevo.getTitulo(), nuevo.getUrl(), 0, ANCHO_CELDA, ALTO_CELDA_LISTA));
 					}else {
 						JOptionPane.showMessageDialog(panelPrincipal, "El video ya está en la lista",
 								"Error Añadir", JOptionPane.ERROR_MESSAGE);

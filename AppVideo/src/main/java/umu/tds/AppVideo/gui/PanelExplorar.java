@@ -33,6 +33,16 @@ import javax.swing.JButton;
 import javax.swing.JList;
 
 public class PanelExplorar extends JPanel {
+	private static final int ALTO_CELDA = 240;
+	private static final int ANCHO_CELDA = 300;
+	private static final int ALTO_SCROLL_TABLA = 480;
+	private static final int ANCHO_SCROLL_TABLA = 940;
+	private static final int ANCHO_COLUMNA_TABLA = 230;
+	private static final int ALTO_FILA_TABLA = 150;
+	private static final int ALTO_LISTA_ETIQUETAS = 50;
+	private static final int ANCHO_LISTA_ETIQUETAS = 60;
+	private static final int ALTO_PANEL = 620;
+	private static final int ANCHO_PANEL = 970;
 	/**
 	 * 
 	 */
@@ -61,9 +71,9 @@ public class PanelExplorar extends JPanel {
 	}
 
 	public void initialize() {
-		this.setMaximumSize(new Dimension(970, 620));
-		this.setMinimumSize(new Dimension(970, 620));
-		this.setPreferredSize(new Dimension(970, 620));
+		this.setMaximumSize(new Dimension(ANCHO_PANEL, ALTO_PANEL));
+		this.setMinimumSize(new Dimension(ANCHO_PANEL, ALTO_PANEL));
+		this.setPreferredSize(new Dimension(ANCHO_PANEL, ALTO_PANEL));
 		this.setLayout(new BorderLayout(0, 0));
 
 		panelEtiquetas = new JPanel();
@@ -75,7 +85,7 @@ public class PanelExplorar extends JPanel {
 
 		GridBagLayout gbl_panelEtiquetas = new GridBagLayout();
 		gbl_panelEtiquetas.columnWidths = new int[] { 10, 0, 10, 0 };
-		gbl_panelEtiquetas.rowHeights = new int[] { 20, 0, 0, 0, 0, 0, 0, 0, 0, 50, 0, 0, 0, 0, 0, 0, 0, 0, 20, 0 };
+		gbl_panelEtiquetas.rowHeights = new int[] { 20, 0, 0, 0, 0, 0, 0, 0, 0, ALTO_LISTA_ETIQUETAS, 0, 0, 0, 0, 0, 0, 0, 0, 20, 0 };
 		gbl_panelEtiquetas.columnWeights = new double[] { 0.0, 1.0, 0.0, Double.MIN_VALUE };
 		gbl_panelEtiquetas.rowWeights = new double[] { 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0,
 				0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
@@ -102,9 +112,9 @@ public class PanelExplorar extends JPanel {
 		gbc_listEtiquetas.gridx = 1;
 		gbc_listEtiquetas.gridy = 3;
 		scrollListaEtiquetas = new JScrollPane(listEtiquetas);
-		scrollListaEtiquetas.setMaximumSize(new Dimension(60, 50));
-		scrollListaEtiquetas.setMinimumSize(new Dimension(60, 50));
-		scrollListaEtiquetas.setPreferredSize(new Dimension(60, 50));
+		scrollListaEtiquetas.setMaximumSize(new Dimension(ANCHO_LISTA_ETIQUETAS, ALTO_LISTA_ETIQUETAS));
+		scrollListaEtiquetas.setMinimumSize(new Dimension(ANCHO_LISTA_ETIQUETAS, ALTO_LISTA_ETIQUETAS));
+		scrollListaEtiquetas.setPreferredSize(new Dimension(ANCHO_LISTA_ETIQUETAS, ALTO_LISTA_ETIQUETAS));
 		scrollListaEtiquetas.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		panelEtiquetas.add(scrollListaEtiquetas, gbc_listEtiquetas);
 
@@ -128,9 +138,9 @@ public class PanelExplorar extends JPanel {
 		gbc_listEtiquetaSel.gridx = 1;
 		gbc_listEtiquetaSel.gridy = 12;
 		scrollListaEtiquetasSel = new JScrollPane(listEtiquetaSel);
-		scrollListaEtiquetasSel.setMaximumSize(new Dimension(60, 50));
-		scrollListaEtiquetasSel.setMinimumSize(new Dimension(60, 50));
-		scrollListaEtiquetasSel.setPreferredSize(new Dimension(60, 50));
+		scrollListaEtiquetasSel.setMaximumSize(new Dimension(ANCHO_LISTA_ETIQUETAS, ALTO_LISTA_ETIQUETAS));
+		scrollListaEtiquetasSel.setMinimumSize(new Dimension(ANCHO_LISTA_ETIQUETAS, ALTO_LISTA_ETIQUETAS));
+		scrollListaEtiquetasSel.setPreferredSize(new Dimension(ANCHO_LISTA_ETIQUETAS, ALTO_LISTA_ETIQUETAS));
 		scrollListaEtiquetasSel.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		panelEtiquetas.add(scrollListaEtiquetasSel, gbc_listEtiquetaSel);
 
@@ -198,14 +208,14 @@ public class PanelExplorar extends JPanel {
 		panelResultados = new JPanel();
 		panelPrincipal.add(panelResultados, BorderLayout.CENTER);
 
-		resultadoBusqueda = new TablaBusqueda(MiniaturaVideo.class, new MiniaturaVideoTableRenderer(), 150, 230,
+		resultadoBusqueda = new TablaBusqueda(MiniaturaVideo.class, new MiniaturaVideoTableRenderer(), ALTO_FILA_TABLA, ANCHO_COLUMNA_TABLA,
 				NUM_COLUMNAS_RESULTADO);
 		crearEventoRatonTabla(resultadoBusqueda);
 
 		JScrollPane scroll = new JScrollPane(resultadoBusqueda);
-		scroll.setMinimumSize(new Dimension(940, 480));
-		scroll.setPreferredSize(new Dimension(940, 480));
-		scroll.setMaximumSize(new Dimension(940, 480));
+		scroll.setMinimumSize(new Dimension(ANCHO_SCROLL_TABLA, ALTO_SCROLL_TABLA));
+		scroll.setPreferredSize(new Dimension(ANCHO_SCROLL_TABLA, ALTO_SCROLL_TABLA));
+		scroll.setMaximumSize(new Dimension(ANCHO_SCROLL_TABLA, ALTO_SCROLL_TABLA));
 		scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		panelResultados.add(scroll);
 
@@ -271,7 +281,7 @@ public class PanelExplorar extends JPanel {
 										+ "\" con las etiquetas seleccionadas",
 								"Buscar", JOptionPane.INFORMATION_MESSAGE);
 					} else {
-						Object[][] data = resultadoBusqueda.obtenerTablaResultados(resultados, 300, 240);
+						Object[][] data = resultadoBusqueda.obtenerTablaResultados(resultados, ANCHO_CELDA, ALTO_CELDA);
 						resultadoBusqueda.setModel(new MyTableModel(data, new String[] { "", "", "", "" }));
 						busquedaActual = resultados;
 					}

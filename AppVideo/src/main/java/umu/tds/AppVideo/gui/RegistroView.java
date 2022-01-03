@@ -31,6 +31,8 @@ import umu.tds.AppVideo.controlador.ControladorAppVideo;
 public class RegistroView {
 
 	
+	private static final int ALTO_VENTANA = 620;
+	private static final int ANCHO_VENTANA = 970;
 	private JFrame frmRegistro;
 	private JPasswordField txtContraseña;
 	private JPasswordField txtRepetir;
@@ -61,9 +63,9 @@ public class RegistroView {
 	
 	public void initialize() {
 		frmRegistro = new JFrame();
-		frmRegistro.setMaximumSize(new Dimension(970,620));
-		frmRegistro.setMinimumSize(new Dimension(970,620));
-		frmRegistro.setPreferredSize(new Dimension(970,620));
+		frmRegistro.setMaximumSize(new Dimension(ANCHO_VENTANA,ALTO_VENTANA));
+		frmRegistro.setMinimumSize(new Dimension(ANCHO_VENTANA,ALTO_VENTANA));
+		frmRegistro.setPreferredSize(new Dimension(ANCHO_VENTANA,ALTO_VENTANA));
 		frmRegistro.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmRegistro.getContentPane().add(añadirPanelNorte(), BorderLayout.NORTH);
 		frmRegistro.getContentPane().add(añadirPanelCentro(), BorderLayout.CENTER);
@@ -90,6 +92,7 @@ public class RegistroView {
 	}
 	
 	private JPanel añadirPanelCentro() {
+		
 		JPanel panelCentro = new JPanel();
 		panelCentro.setBackground(new Color(240, 240, 240));
 		panelCentro.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
@@ -302,11 +305,13 @@ public class RegistroView {
 		txtContraseña.setBorder(border);
 		txtRepetir.setBorder(border);
 		txtUsuario.setBorder(border);
+		fechaNacimiento.setBorder(border);
 		
 		lblNombre.setForeground(Color.BLACK);
 		lblUsuario.setForeground(Color.BLACK);
 		lblContraseña.setForeground(Color.BLACK);
 		lblRepetir.setForeground(Color.BLACK);
+		lblFecha.setForeground(Color.BLACK);
 	}
 	
 	private boolean checkFields() {
@@ -350,6 +355,13 @@ public class RegistroView {
 			lblRepetir.setForeground(Color.RED);
 			txtContraseña.setBorder(BorderFactory.createLineBorder(Color.RED));
 			txtRepetir.setBorder(BorderFactory.createLineBorder(Color.RED));
+			salida = false;
+		}
+		
+		if (fechaNacimiento.getDate() == null) {
+			
+			lblFecha.setForeground(Color.RED);
+			fechaNacimiento.setBorder(BorderFactory.createLineBorder(Color.RED));
 			salida = false;
 		}
 		

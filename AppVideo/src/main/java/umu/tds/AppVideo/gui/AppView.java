@@ -40,6 +40,8 @@ import javax.swing.Box;
 
 public class AppView {
 
+	private static final int ALTO_VENTANA = 750;
+	private static final int ANCHO_VENTANA = 1100;
 	private JFrame frmApp;
 	private JPanel panelPrincipal;
 	private JButton btnExplorar;
@@ -79,10 +81,10 @@ public class AppView {
 		frmApp = new JFrame();
 
 		frmApp.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frmApp.setBounds(100, 100, 1100, 720);
-		frmApp.setMaximumSize(new Dimension(1100, 750));
-		frmApp.setMinimumSize(new Dimension(1100, 750));
-		frmApp.setPreferredSize(new Dimension(1100, 750));
+		frmApp.setBounds(100, 100, ANCHO_VENTANA, ALTO_VENTANA);
+		frmApp.setMaximumSize(new Dimension(ANCHO_VENTANA, ALTO_VENTANA));
+		frmApp.setMinimumSize(new Dimension(ANCHO_VENTANA, ALTO_VENTANA));
+		frmApp.setPreferredSize(new Dimension(ANCHO_VENTANA, ALTO_VENTANA));
 		frmApp.setBackground(Color.GRAY);
 		frmApp.setResizable(false);
 
@@ -141,7 +143,6 @@ public class AppView {
 
 		mntmFiltroAdultos = new JMenuItem("Adultos");
 		mnFiltro.add(mntmFiltroAdultos);
-
 		crearManejadorFiltros(mntmFiltroAdultos, new FiltroAdultos());
 
 		mnPremium.add(new JSeparator());
@@ -154,7 +155,7 @@ public class AppView {
 		mnPremium.add(mntmMasVistos);
 		return menu;
 	}
-
+	
 	private JPanel addPanelPrincipal() {
 
 		JPanel panelPrincipal = new JPanel();

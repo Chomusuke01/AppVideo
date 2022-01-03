@@ -124,33 +124,30 @@ public class Usuario {
 		this.fechaNacimiento = fechaNacimiento;
 	}
 
-
+	// Obtener los videos recientes
 	public List<Video> getRecientes() {
 		return new LinkedList<Video>(recientes);
 	}
 
-
+	// recuperar todas las listas de rep
 	public List<ListaReproduccion> getListasVideos() {
 		return new LinkedList<ListaReproduccion>(listasVideos);
 	}
 	
+	//modificar la lista de recientes
 	public void modificarListaRecientes(List<Video> listaModificada) {
 		recientes = new LinkedList<Video>(listaModificada);
 	}
 	
+	// Obtener una lista de rep a partir de su nombre.
 	public ListaReproduccion getListaRep(String lista){
-		
-	
-		if (listasVideos.stream()
-						.filter(l -> l.getNombre().equals(lista)).count() == 0) {
-			return null;
-		}
 		
 		return  listasVideos.stream()
 				.filter(l -> l.getNombre().equals(lista)).findFirst().orElse(null);
 				
 	}
 	
+	// Devuelve todos los videos de todas las listas de rep
 	public List<Video> getVideosFromListas(){
 		
 		HashSet<Video> videos = new HashSet<Video>();
@@ -161,6 +158,7 @@ public class Usuario {
 		return new LinkedList<Video>(videos);
 	}
 	
+	// Añade una lista de rep
 	public void addListaRep (ListaReproduccion lista) {
 		listasVideos.add(lista);
 	}
@@ -187,8 +185,9 @@ public class Usuario {
 		}
 	}
 	
+	//Elimina una lista de rep
 	public void eliminarListaRep (ListaReproduccion lista) {
-		int listaBorrar = 0;
+		int listaBorrar = -1;
 		int i = 0;
 		for (ListaReproduccion listaReproduccion : listasVideos) {
 			if (listaReproduccion.getNombre().equals(lista.getNombre())) {
@@ -196,14 +195,19 @@ public class Usuario {
 			}
 			i++;
 		}
-		listasVideos.remove(listaBorrar);
+		if (listaBorrar != -1) {
+			listasVideos.remove(listaBorrar);
+		}
+		
 	}
-
+	
+	// Metodo para filtrar videos de una búsqueda
 	public List<Video> filtrarVideos(List<Video> videos) {
 		
 		return videos.stream().filter(v -> filtro.isVideoOK(v,this)).collect(Collectors.toList());
 	}
 	
+	// Metodo para cambiar el filtro actual
 	public void cambiarFiltro(FiltroVideo filtro) {
 		this.filtro.setFiltro(filtro);
 	}

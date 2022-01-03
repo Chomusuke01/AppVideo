@@ -23,6 +23,8 @@ import javax.swing.JButton;
 
 public class PanelReproductor extends JPanel{
 
+	private static final int ALTO_PANEL = 620;
+	private static final int ANCHO_PANEL = 970;
 	/**
 	 * 
 	 */
@@ -43,9 +45,9 @@ public class PanelReproductor extends JPanel{
 	private Video videoActual;
 	
 	public PanelReproductor() {
-		this.setMaximumSize(new Dimension(970,620));
-		this.setMinimumSize(new Dimension(970,620));
-		this.setPreferredSize(new Dimension(970,620));
+		this.setMaximumSize(new Dimension(ANCHO_PANEL,ALTO_PANEL));
+		this.setMinimumSize(new Dimension(ANCHO_PANEL,ALTO_PANEL));
+		this.setPreferredSize(new Dimension(ANCHO_PANEL,ALTO_PANEL));
 		setLayout(new BorderLayout(0, 0));
 		
 		panelNorte = new JPanel();

@@ -26,6 +26,12 @@ import java.awt.CardLayout;
 
 public class PanelMisListas extends JPanel {
 
+	private static final int ALTO_SCROLL = 450;
+	private static final int ANCHO_SCROLL = 220;
+	private static final int ANCHO_CELDA = 150;
+	private static final int ALTO_CELDA = 120;
+	private static final int ALTO_PANEL = 620;
+	private static final int ANCHO_PANEL = 970;
 	private static final long serialVersionUID = 1L;
 	private JComboBox<ListaReproduccion> comboBoxLista;
 	private JPanel panel_oeste;
@@ -39,9 +45,9 @@ public class PanelMisListas extends JPanel {
 	private ListaReproduccion listaActual;
 
 	public PanelMisListas() {
-		setPreferredSize(new Dimension(970, 620));
-		setMinimumSize(new Dimension(970, 620));
-		setMaximumSize(new Dimension(970, 620));
+		setPreferredSize(new Dimension(ANCHO_PANEL, ALTO_PANEL));
+		setMinimumSize(new Dimension(ANCHO_PANEL, ALTO_PANEL));
+		setMaximumSize(new Dimension(ANCHO_PANEL, ALTO_PANEL));
 		setLayout(new BorderLayout(0, 0));
 		
 		panel_oeste = new JPanel();
@@ -92,12 +98,12 @@ public class PanelMisListas extends JPanel {
 		add(panel_centro, BorderLayout.CENTER);
 		panel_centro.setLayout(new CardLayout(0, 0));
 		
-		listaRep = new ListaVideos(new DefaultListModel<MiniaturaVideo>(),120,150);
+		listaRep = new ListaVideos(new DefaultListModel<MiniaturaVideo>(),ALTO_CELDA,ANCHO_CELDA);
 		
 		JScrollPane scroll = new JScrollPane(listaRep);
-		scroll.setMinimumSize(new Dimension(220,450));
-		scroll.setPreferredSize(new Dimension(220,450));
-		scroll.setMaximumSize(new Dimension(220,450));
+		scroll.setMinimumSize(new Dimension(ANCHO_SCROLL,ALTO_SCROLL));
+		scroll.setPreferredSize(new Dimension(ANCHO_SCROLL,ALTO_SCROLL));
+		scroll.setMaximumSize(new Dimension(ANCHO_SCROLL,ALTO_SCROLL));
 		scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		panel_resultados.add(scroll);
 		
@@ -147,7 +153,7 @@ public class PanelMisListas extends JPanel {
 				if (comboBox.getSelectedIndex() > 0) {
 					listaActual = ControladorAppVideo.getUnicaInstancia().getListaReproduccion(((ListaReproduccion) comboBox.getSelectedItem()).getNombre());
 					listaRep.reiniciar();
-					listaRep.añadirElementos(listaActual.getVideos().stream().map(v -> new MiniaturaVideo(v.getTitulo(),v.getUrl(),0,150,120)).collect(Collectors.toList()));
+					listaRep.añadirElementos(listaActual.getVideos().stream().map(v -> new MiniaturaVideo(v.getTitulo(),v.getUrl(),0,ANCHO_CELDA,ALTO_CELDA)).collect(Collectors.toList()));
 				}	
 			}
 			
