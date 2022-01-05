@@ -9,7 +9,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 public class MiniaturaVideoTableRenderer extends DefaultTableCellRenderer {
 
 	/**
-	 * 
+	 * Clase para el render de las celdas de la tabla.
 	 */
 	private static final long serialVersionUID = 1L;
 	

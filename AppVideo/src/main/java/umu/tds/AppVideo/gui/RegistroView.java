@@ -371,7 +371,7 @@ public class RegistroView {
 		return salida;
 	}
 	
-	
+	//-----------Manejador de los botones ----------------//
 	private void crearManejadorBotonRegistar(JButton btnRegistrar) {
 		btnRegistrar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

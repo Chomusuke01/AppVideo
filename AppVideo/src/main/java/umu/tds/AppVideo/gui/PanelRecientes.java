@@ -89,7 +89,7 @@ public class PanelRecientes extends JPanel {
 					listaRep.eliminarElemento(indice);
 					listaRep.añadirPrincipio(new MiniaturaVideo(videoSel.getTitulo(), videoSel.getUrl(), 0, ANCHO_CELDA, ALTO_CELDA));
 					ControladorAppVideo.getUnicaInstancia().nuevaReproduccion(videoSel);
-					ControladorAppVideo.getUnicaInstancia().modificarRecientes(listaRecientes);
+					ControladorAppVideo.getUnicaInstancia().añadirVideoReciente(videoSel);
 				}
 			}
 		});

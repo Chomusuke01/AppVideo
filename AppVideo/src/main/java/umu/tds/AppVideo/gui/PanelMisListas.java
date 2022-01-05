@@ -112,7 +112,7 @@ public class PanelMisListas extends JPanel {
 		panel_centro.add(panelVacio,"vacio");
 		panel_centro.add(reproductor,"reproductor");
 	}
-	
+	// Cargar las listas de la BD
 	private void cargarListas() {
 		DefaultComboBoxModel<ListaReproduccion> modelLista = (DefaultComboBoxModel<ListaReproduccion>)comboBoxLista.getModel();
 		List<ListaReproduccion> listaRep = ControladorAppVideo.getUnicaInstancia().getListasReproduccion();
@@ -120,7 +120,7 @@ public class PanelMisListas extends JPanel {
 		comboBoxLista.addItem(new ListaReproduccion("<Seleccione la lista de videos>"));
 		modelLista.addAll(listaRep);
 	}
-
+	//Actualizar la vista
 	public void actualizar() {
 		cargarListas();
 		CardLayout cl = (CardLayout) (panel_centro.getLayout());
@@ -128,6 +128,9 @@ public class PanelMisListas extends JPanel {
 		listaRep.reiniciar();
 		listaActual = null;
 	}
+	
+	// ------------- Manejador de los botones --------------//
+	
 	
 	private void crearManejadorBtnReproducir(JButton btn) {
 		btn.addActionListener(new ActionListener() {

@@ -248,6 +248,8 @@ public class PanelExplorar extends JPanel {
 		}
 	}
 
+	//---------------Manejador de los botones---------------------//
+	
 	private void crearManejadorBtnBuscar(JButton btnBuscar, JPanel panel) {
 		btnBuscar.addActionListener(new ActionListener() {
 
@@ -353,6 +355,7 @@ public class PanelExplorar extends JPanel {
 		});
 	}
 
+	// Metodo para obtener todas las etiquetas seleccionadas a la hora de realizar una busqueda.
 	private List<String> getEtiquetasSelccionadas() {
 
 		LinkedList<String> etiquetas = new LinkedList<String>();

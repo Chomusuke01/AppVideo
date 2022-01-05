@@ -216,6 +216,8 @@ public class PanelNuevaLista extends JPanel {
 		
 	}
 	
+	
+	// -----------------Manejador de los botones -------------------//
 	private void crearManejadorBtnBuscarVideos(JButton boton) {
 		
 		boton.addActionListener(new ActionListener() {
@@ -239,6 +241,7 @@ public class PanelNuevaLista extends JPanel {
 			}
 		});
 	}
+	
 	
 	
 	private void crearManejadorBtnBuscarLista(JButton boton) {

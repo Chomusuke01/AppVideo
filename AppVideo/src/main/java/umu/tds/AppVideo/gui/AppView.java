@@ -18,7 +18,6 @@ import javax.swing.border.BevelBorder;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import java.util.EventObject;
 
 import umu.tds.AppVideo.controlador.ControladorAppVideo;
@@ -69,9 +68,10 @@ public class AppView {
 	private JPanel panelLuz;
 	private Luz luz;
 	private Component horizontalStrut;
-	
+	private JFileChooser folderChooser;
+
 	private JFileChooser fileChooser;
-	
+
 	public AppView() {
 		initialize();
 	}
@@ -115,10 +115,11 @@ public class AppView {
 
 		menuBar = crearMenu();
 		panelMenu.add(menuBar);
-		
-		
-		fileChooser = new JFileChooser();
 
+		fileChooser = new JFileChooser();
+		folderChooser = new JFileChooser();
+		folderChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		folderChooser.setDialogTitle("Seleccione la carpeta para guardar el PDF");
 	}
 
 	private JMenuBar crearMenu() {
@@ -155,7 +156,7 @@ public class AppView {
 		mnPremium.add(mntmMasVistos);
 		return menu;
 	}
-	
+
 	private JPanel addPanelPrincipal() {
 
 		JPanel panelPrincipal = new JPanel();
@@ -230,7 +231,7 @@ public class AppView {
 
 		luz = new Luz();
 		panelLuz.add(luz);
-		luz.setColor(new Color(92,253,204));
+		luz.setColor(new Color(92, 253, 204));
 		crearManejadorPulsador();
 
 		return panel_Norte;
@@ -345,12 +346,19 @@ public class AppView {
 
 				if (ControladorAppVideo.getUnicaInstancia().isUsuarioPremium()) {
 
-					if (!ControladorAppVideo.getUnicaInstancia().generarPDF()) {
-						JOptionPane.showMessageDialog(panelApp, "Ha ocurrido un error al generar el PDF", "ERROR PDF",
-								JOptionPane.ERROR_MESSAGE);
-					} else {
-						JOptionPane.showMessageDialog(panelApp, "PDF generado con éxito", "PDF",
-								JOptionPane.INFORMATION_MESSAGE);
+					try {
+						folderChooser.showOpenDialog(folderChooser);
+						String ruta = folderChooser.getSelectedFile().getAbsolutePath();
+						System.out.println(ruta);
+						if (!ControladorAppVideo.getUnicaInstancia().generarPDF(ruta)) {
+							JOptionPane.showMessageDialog(panelApp, "Ha ocurrido un error al generar el PDF",
+									"ERROR PDF", JOptionPane.ERROR_MESSAGE);
+						} else {
+							JOptionPane.showMessageDialog(panelApp, "PDF generado con éxito en " + ruta, "PDF",
+									JOptionPane.INFORMATION_MESSAGE);
+						}
+					} catch (NullPointerException exc) {
+						// No se ha seleccionado ninguna carpeta
 					}
 
 				} else {
@@ -375,18 +383,18 @@ public class AppView {
 	}
 
 	private void crearManejadorPulsador() {
-	
+
 		luz.addEncendidoListener(new IEncendidoListener() {
 
 			@Override
 			public void enteradoCambioEncendido(EventObject ev) {
-				
-					try {
-						fileChooser.showOpenDialog(fileChooser);
-						String ficheroXML = fileChooser.getSelectedFile().getAbsolutePath();
-						ControladorAppVideo.getUnicaInstancia().cargarVideos(ficheroXML);
-					} catch (NullPointerException e) {
-						// No se ha seleccionado ningun fichero
+
+				try {
+					fileChooser.showOpenDialog(fileChooser);
+					String ficheroXML = fileChooser.getSelectedFile().getAbsolutePath();
+					ControladorAppVideo.getUnicaInstancia().cargarVideos(ficheroXML);
+				} catch (NullPointerException e) {
+					// No se ha seleccionado ningun fichero
 				}
 			}
 		});

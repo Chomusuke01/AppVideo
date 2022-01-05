@@ -113,6 +113,9 @@ public class LoginView {
 		
 	}
 	
+	//------------------Manejadores de los botones ----------------------//
+	
+	
 	private void crearManejadorBotonRegistro(JButton btnRegistro) {
 		btnRegistro.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

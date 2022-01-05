@@ -73,6 +73,7 @@ public class ControladorAppVideo implements VideosListener{
 		catalogoVideos = CatalogoVideos.getUnicaInstancia();
 	}
 	
+	// Método para registrar un usuario
 	public void registrarUsuario(String usuario, String nombre,String contraseña, String email, String apellidos, Date fecha_nacimiento) {
 
 		Usuario u = new Usuario(nombre, apellidos, email, usuario, contraseña, fecha_nacimiento);
@@ -80,10 +81,12 @@ public class ControladorAppVideo implements VideosListener{
 		catalogoUsuarios.addUsuario(u);
 	}
 	
+	// Comprobar si hay nicks repetidos
 	public boolean exiteUsuario(String usuario) {
 		return catalogoUsuarios.getUsuario(usuario) != null;
 	}
 	
+	// Comprobor si los datos son correctos y hacer login en la aplicacion
 	public boolean loginUsuario (String usuario, String contraseña) {
 		
 		Usuario u = catalogoUsuarios.getUsuario(usuario);
@@ -94,6 +97,7 @@ public class ControladorAppVideo implements VideosListener{
 		return false;
 	}
 	
+	// Cambiar un usuario a premium o que deje de ser premium, devuelve el estado anterior.
 	public boolean usuarioPremium() {
 		
 		if (usuarioActual.isPremium()) {
@@ -109,32 +113,39 @@ public class ControladorAppVideo implements VideosListener{
 		return false;
 	}
 	
+	// Comprobar si un usuario es premium 
 	public boolean isUsuarioPremium() {
 		return usuarioActual.isPremium();
 	}
 	
+	// Buscar videos en funcion del titulo y las etiquetas. Los videos son filtrados acorde con el filtro actual seleccionado
 	public List<Video> buscarVideos(String tituloVideo, List<String> etiquetas){
 		return usuarioActual.filtrarVideos(catalogoVideos.realizarBusqueda(tituloVideo,etiquetas));
 	}
 	
+	// Aumentar el numero de reproducciones de un video 
 	public void nuevaReproduccion(Video video) {
 		video.aumentarNumReproducciones();
 		adaptadorVideo.modificarVideo(video);
 	}
 	
+	// Obtener una lista de reproduccion a partir de su nombre.
 	public ListaReproduccion getListaReproduccion(String nombre){
 		
 		return usuarioActual.getListaRep(nombre);
 	}
 	
+	// Obtener los videos mas vistos por todos los usuarios
 	public List<Video> getListaMasVistos(){
 		return catalogoVideos.getMasVistos();
 	}
 	
+	// Obtener los videos recientes de un usuario.
 	public List<Video> getListaRecientes(){
 		return usuarioActual.getRecientes();
 	}
 	
+	// Crear una nueva lista de reproduccion para el usuario actual. 
 	public ListaReproduccion  añadirNuevaLista(String lista) {
 		
 		ListaReproduccion listaRep = new ListaReproduccion(lista);
@@ -145,11 +156,13 @@ public class ControladorAppVideo implements VideosListener{
 		
 	}
 	
+	// Eliminar una lista de reproduccion del usuario actual. 
 	public void eliminarLista(ListaReproduccion lista) {
 		usuarioActual.eliminarListaRep(lista);
 		adaptadorUsuario.modificarUsuario(usuarioActual);
 	}
 	
+	//Añadir un video a una lista de reproduccion.
 	public boolean añadirVideoLista(ListaReproduccion lista, Video v) {
 		
 		if (lista.añadirVideo(v)) {
@@ -160,26 +173,25 @@ public class ControladorAppVideo implements VideosListener{
 		return false;
 	}
 	
+	// Eliminar un video de una lista de reproduccion
 	public void eliminarVideoLista(ListaReproduccion lista, Video video) {
 		
 		lista.eliminarVideo(video);
 		adaptadorListaReproduccion.ModificarListaReproduccion(lista);
 	}
 	
+	//Obtener todas las listas de reproduccion de un usuario
 	public List<ListaReproduccion> getListasReproduccion(){
 		return usuarioActual.getListasVideos();
 	}
 	
+	// Añadir un video a los recientes del usuario actual. 
 	public void añadirVideoReciente(Video video) {
 		usuarioActual.nuevoReciente(video);
 		adaptadorUsuario.modificarUsuario(usuarioActual);
 	}
 	
-	public void modificarRecientes(List<Video> recientes) {
-		usuarioActual.modificarListaRecientes(recientes);
-		adaptadorUsuario.modificarUsuario(usuarioActual);
-	}
-	
+	// Añadir una nueva etiqueta a un video . No se permiten etiquetas repetidas
 	public boolean añadirEtiqueta (Video v, String etiqueta) {
 		
 		Etiqueta e = new Etiqueta(etiqueta);
@@ -192,14 +204,16 @@ public class ControladorAppVideo implements VideosListener{
 		return false;
 	}
 	
+	// Obtener todas las etiquetas de todos los videos.
 	public List<String> getEtiquetasVideos(){
 		return catalogoVideos.getEtiquetasVideos();
 	}
 	
-	public boolean generarPDF() {
+	// Generar un pdf con informacion de las listas de reproduccion
+	public boolean generarPDF(String ruta) {
 		
 		try {
-			PdfGenerator.generarPDF(usuarioActual.getListasVideos(), usuarioActual.getUsuario());
+			PdfGenerator.generarPDF(usuarioActual.getListasVideos(), usuarioActual.getUsuario(),ruta);
 		} catch (FileNotFoundException | DocumentException e) {
 			e.printStackTrace();
 			return false;
@@ -207,6 +221,7 @@ public class ControladorAppVideo implements VideosListener{
 		return true;
 	}
 	
+	//Cambiar el filtro de un usuario
 	public void cambiarFiltro(FiltroVideo filtro) {
 		usuarioActual.setFiltroActual(filtro.getClass().getName());
 		usuarioActual.cambiarFiltro(filtro);
@@ -228,11 +243,12 @@ public class ControladorAppVideo implements VideosListener{
 		}
 	}
 	
-	
+	// Cargar el fichero xml con los nuevos videos
 	public void cargarVideos(String ficheroXML){
 		cv.setArchivoVideos(ficheroXML);
 	}
 	
+	// Obtener las etiquetas de los videos del xml.
 	private Etiqueta [] parseEtiquetas(List<String> etiquetasAnt) {
 		Etiqueta[] etiquetas = new Etiqueta[etiquetasAnt.size()];
 		

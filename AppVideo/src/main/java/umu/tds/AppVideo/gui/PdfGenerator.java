@@ -16,9 +16,9 @@ import umu.tds.AppVideo.modelo.Video;
 
 public class PdfGenerator {
 
-	public static void generarPDF(List<ListaReproduccion> lista, String usuario) throws DocumentException, FileNotFoundException {
+	public static void generarPDF(List<ListaReproduccion> lista, String usuario, String ruta) throws DocumentException, FileNotFoundException {
 		
-		FileOutputStream archivo = new FileOutputStream("D:\\Escritorio\\hola.pdf");
+		FileOutputStream archivo = new FileOutputStream(ruta + "\\MisListas.pdf");
 		Document documento = new Document();
 		PdfWriter.getInstance(documento, archivo);
 		documento.open();

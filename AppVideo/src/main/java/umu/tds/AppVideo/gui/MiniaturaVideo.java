@@ -9,6 +9,8 @@ import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import java.awt.Color;
 
+
+// Clase para representar las miniaturas de los videos que aparecen en las lista y en los resultados de las busquedas
 public class MiniaturaVideo extends JPanel{
 	
 	/**
@@ -29,7 +31,7 @@ public class MiniaturaVideo extends JPanel{
 		this.id = id;
 	}
 	
-//
+	// Hay que redefinirlo por que tiene dos paneles para colorear 
 	@Override
 	public void setBackground(Color bg) {
 		if (panelMiniatura != null ) {

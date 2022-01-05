@@ -134,11 +134,6 @@ public class Usuario {
 		return new LinkedList<ListaReproduccion>(listasVideos);
 	}
 	
-	//modificar la lista de recientes
-	public void modificarListaRecientes(List<Video> listaModificada) {
-		recientes = new LinkedList<Video>(listaModificada);
-	}
-	
 	// Obtener una lista de rep a partir de su nombre.
 	public ListaReproduccion getListaRep(String lista){
 		
