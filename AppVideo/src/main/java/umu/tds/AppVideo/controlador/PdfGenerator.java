@@ -1,4 +1,4 @@
-package umu.tds.AppVideo.gui;
+package umu.tds.AppVideo.controlador;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -14,6 +14,7 @@ import com.itextpdf.text.pdf.PdfWriter;
 import umu.tds.AppVideo.modelo.ListaReproduccion;
 import umu.tds.AppVideo.modelo.Video;
 
+// Clase que ofrece un metodo para generar pdfs. Evita que el controlador tenga que tener todo el código.
 public class PdfGenerator {
 
 	public static void generarPDF(List<ListaReproduccion> lista, String usuario, String ruta) throws DocumentException, FileNotFoundException {

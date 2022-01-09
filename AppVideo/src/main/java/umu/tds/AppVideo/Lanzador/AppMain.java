@@ -1,7 +1,8 @@
-package umu.tds.AppVideo.gui;
+package umu.tds.AppVideo.Lanzador;
 import java.awt.EventQueue;
 
 import tds.video.VideoWeb;
+import umu.tds.AppVideo.gui.LoginView;
 
 public class AppMain {
 

@@ -8,7 +8,6 @@ import java.util.List;
 
 import com.itextpdf.text.DocumentException;
 
-import umu.tds.AppVideo.gui.PdfGenerator;
 import umu.tds.AppVideo.modelo.CatalogoUsuarios;
 import umu.tds.AppVideo.modelo.CatalogoVideos;
 import umu.tds.AppVideo.modelo.Etiqueta;
